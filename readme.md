@@ -1,0 +1,1 @@
+fastapi model based service repo data store with ravendb as nosql data store

@@ -1,0 +1,8 @@
+fastapi==0.88.0
+gunicorn==20.1.0
+pydantic==1.10.4
+psycopg2-binary==2.9.2
+ravendb==5.2.4
+starlette==0.22.0
+python-dotenv==1.0.0
+uvicorn==0.20.0

@@ -1,0 +1,18 @@
+macroMapper/
+  __init__.py
+  main.py
+  src/controller/
+    Controller.py
+  src/repository/
+    Repository.py
+  src/service/
+    Service.py
+  src/util/
+    DBConnect.py
+    Middleware.py
+  src/model/
+    User.py
+    Result.py
+  tests/
+    test_account_repository.py
+    test_address_repository.py
