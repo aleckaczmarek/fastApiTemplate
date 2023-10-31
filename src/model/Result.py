@@ -1,12 +1,5 @@
 from pydantic import BaseModel
-from pydantic.dataclasses import dataclass
-from typing import Optional, TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from dataclasses import dataclass
-else:
-    def dataclass(model):
-        return model
+from typing import Optional
 
 class Result(BaseModel):
     Id: Optional[int|str] = None

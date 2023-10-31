@@ -1,5 +1,6 @@
 from src.service.Service import Service
-from src.model.User import User 
+from src.auth.Security import get_password_hash
+from src.model.User import User  
 from src.util.HttpUtils import runner, runnerWithData
 from typing import List, Annotated
 from fastapi import APIRouter, Depends
@@ -28,8 +29,14 @@ async def get_user(userid):
    return await runnerWithData(service.get,userid,None)
 
 @router.post('/api/users/create')
-async def create_user(user:User):
-   return await runnerWithData(service.create,user,None)
+async def create_user(user:User,password:str):
+   print("Starting ")
+   userToCreate= User(**user.dict())
+   print("created, ", userToCreate)
+   print("password ",password)
+   hashedPassword = get_password_hash(password)
+   userToCreate.build("hashed_password",hashedPassword)
+   return await runnerWithData(service.create,userToCreate,None)
 
 @router.get('/api/users/delete/{userid}')
 async def delete_user(userid):

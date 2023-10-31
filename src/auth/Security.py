@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from typing import Annotated, Optional, TYPE_CHECKING
+from typing import Annotated, Optional
 
 from fastapi import Depends, HTTPException, status, APIRouter
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm 
@@ -7,7 +7,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt 
 from passlib.context import CryptContext
 from pydantic import BaseModel
-from src.model.User import User
+from src.model.User import User 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/users/token")
 router = APIRouter()
@@ -19,11 +19,20 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 fake_users_db = {
     "johndoe": {
-        "username": "johndoe",
-        "full_name": "John Doe",
-        "email": "johndoe@example.com",
-        "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
-        "disabled": False,
+    "Id": "3",
+    "first_name": "ajk",
+    "last_name": "kaz",
+    "address_id": 0,
+    "username": "aljk",
+    "email": "aljk@gmail.com",
+    "full_name": "aljk_kaz",
+    "auth": "user",
+    "groups": [
+        "user:self"
+    ],
+    "disabled": False,
+    "collection_name": "users",
+    "hashed_password": "$2b$12$GwFXDLS7wmgmjjGEVQfRdemybVFxv6HIc5soPYbVG.0.UNmpMCd7C",
     }
 }
 
@@ -33,10 +42,6 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: Optional[str] = None
-
-
-class UserInDB(User):
-    hashed_password: Optional[str] = None
     
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -49,7 +54,7 @@ def get_password_hash(password):
 def get_user(db, username: str):
     if username in db:
         user_dict = db[username]
-        return UserInDB(**user_dict)
+        return User(**user_dict)
 
 def authenticate_user(fake_db, username: str, password: str): 
     user = get_user(fake_db, username) 
@@ -113,7 +118,7 @@ async def login_for_access_token(
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={"sub": user.username, "auth":user.auth, "groups":user.groups}, expires_delta=access_token_expires
     )
     return {"access_token":access_token,"token_type":"bearer"}
 

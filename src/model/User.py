@@ -1,7 +1,5 @@
 from pydantic import BaseModel
-from pydantic.dataclasses import dataclass
-from typing import Optional, TYPE_CHECKING
-
+from typing import Optional,List
 
 class User(BaseModel):
     Id: Optional[int|str] = None
@@ -11,8 +9,11 @@ class User(BaseModel):
     username: Optional[str] = None
     email: Optional[str] = None
     full_name: Optional[str] = None
+    auth: Optional[str] = None
+    groups: List[str] = []
     disabled: Optional[bool] = None
     collection_name:Optional[str]  = "users"
+    hashed_password: Optional[str] = None
 
     class Config:
         orm_mode = True

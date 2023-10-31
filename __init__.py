@@ -14,8 +14,9 @@ macroMapper/
     Middleware.py
     HttpUtils.py
   src/model/
-    User.py
     Result.py
+    User.py
+    User.py
   tests/
     test_account_repository.py
     test_address_repository.py
