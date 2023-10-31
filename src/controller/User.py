@@ -5,7 +5,7 @@ from typing import List, Annotated
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordBearer
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/users/token")
 service = Service(User) 
 router = APIRouter()
 
@@ -18,7 +18,7 @@ async def retrieve_users(token: Annotated[str, Depends(oauth2_scheme)]):
    print("token ", token)
    return await runner(service.getAll,None)
 
-@router.get('/api/users/{userid}',response_model=User)
+@router.get('/api/users/{userid}/get/',response_model=User)
 async def get_user(userid):
    async def setErrorMiddleware(result,data):
             result.build("status","error")
