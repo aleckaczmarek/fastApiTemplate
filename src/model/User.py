@@ -13,13 +13,16 @@ class User(BaseModel):
     Id: Optional[int|str] = None
     first_name:  Optional[str] = None
     last_name: Optional[str] = None
-    address_id: Optional[int] = None
-    email_address: Optional[str] = None
+    address_id: Optional[int] = None 
+    username: Optional[str] = None
+    email: Optional[str] = None
+    full_name: Optional[str] = None
+    disabled: Optional[bool] = None
     collection_name:str = "users" 
 
-    def __init__(self,Id=None, first_name=None, last_name=None, address_id=None, email_address=None,collection_name="Users"):
+    def __init__(self,Id=None, first_name=None, last_name=None, address_id=None, username=None, email=None, full_name=None, disabled=None, collection_name="Users"):
         print("user init")
-        super().__init__(Id=Id, first_name=first_name, last_name=last_name, address_id=address_id, email_address=email_address,collection_name=collection_name)
+        super().__init__(Id=Id, first_name=first_name, last_name=last_name, address_id=address_id, username=username, email=email, full_name=full_name,disabled=disabled,collection_name=collection_name)
 
     def build(self,key,value):
         setattr(self,key,value)

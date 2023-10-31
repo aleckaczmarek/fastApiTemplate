@@ -1,6 +1,8 @@
 macroMapper/
   __init__.py
   main.py
+  src/auth/
+    Security.py
   src/controller/
     User.py
   src/repository/
