@@ -2,7 +2,7 @@ macroMapper/
   __init__.py
   main.py
   src/controller/
-    Controller.py
+    User.py
   src/repository/
     Repository.py
   src/service/
@@ -10,6 +10,7 @@ macroMapper/
   src/util/
     DBConnect.py
     Middleware.py
+    HttpUtils.py
   src/model/
     User.py
     Result.py
