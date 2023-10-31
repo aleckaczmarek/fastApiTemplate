@@ -1,20 +1,21 @@
 from src.service.Service import Service
 from src.model.User import User 
 from src.util.HttpUtils import runner, runnerWithData
-from typing import List
-from fastapi import APIRouter
+from typing import List, Annotated
+from fastapi import APIRouter, Depends
+from fastapi.security import OAuth2PasswordBearer
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 service = Service(User) 
 router = APIRouter()
 
-
 @router.get('/api/users', response_model=List[User]|None)
-async def retrieve_users():
+async def retrieve_users(token: Annotated[str, Depends(oauth2_scheme)]):
    async def setErrorMiddleware(result,data):
             result.build("status","error")
             result.build("error",{"error":"this is the error"})
             return result
-   
+   print("token ", token)
    return await runner(service.getAll,None)
 
 @router.get('/api/users/{userid}',response_model=User)

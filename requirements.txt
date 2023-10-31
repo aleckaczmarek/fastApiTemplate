@@ -5,4 +5,5 @@ psycopg2-binary==2.9.2
 ravendb==5.2.4
 starlette==0.22.0
 python-dotenv==1.0.0
+python_multipart==0.0.6
 uvicorn==0.20.0
