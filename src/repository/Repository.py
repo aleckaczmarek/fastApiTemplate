@@ -32,13 +32,11 @@ class Repository():
             documents = []
             query = self.db.getAllFromConnectedCollection()
             for doc in query:
-                del doc['@metadata']
-                print("doc in query ", doc)
+                del doc['@metadata'] 
                 newDoc = self.model()
                 for key in doc:
                     newDoc.build(key,doc[key])
-                documents.append(newDoc)
-                print("docs ", documents)
+                documents.append(newDoc) 
             return documents
         except (Exception) as error:
             print("error repo")
@@ -53,6 +51,22 @@ class Repository():
                 newDoc.build(item[0],item[1])
             return document
         except (Exception) as error:
+            print(error)
+            return None
+        
+    def getWhere(self,key,value):
+        try:
+            documents = []
+            query = self.db.getWhereFromConnectedCollection(key,value) 
+            for doc in query:
+                del doc['@metadata'] 
+                newDoc = self.model()
+                for key in doc:
+                    newDoc.build(key,doc[key])
+                documents.append(newDoc) 
+            return documents
+        except (Exception) as error:
+            print("error repo")
             print(error)
             return None
 

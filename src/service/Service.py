@@ -22,12 +22,19 @@ class Service():
        result =  await self.middlewareRunner(None,getAll,middleware)
        return result
 
-    def get(self,id,middleware: Optional[Callable[..., Awaitable[T]]]):
+    async def get(self,id,middleware: Optional[Callable[..., Awaitable[T]]]):
        item = self.model()
        item.build("Id",id)
        def get(data):
             return self.repo.get(data.Id)
-       result =  self.middlewareRunner(item,get,middleware)
+       result =  await self.middlewareRunner(item,get,middleware)
+       return result
+    
+    async def getWhere(self,key,value,middleware: Optional[Callable[..., Awaitable[T]]]):
+       def getWhere(data):
+            return self.repo.getWhere(data['key'],data['value'])
+       result =  await self.middlewareRunner({"key":key,"value":value},getWhere,middleware)
+       print("result ", result)
        return result
 
     def delete(self, id,middleware: Optional[Callable[..., Awaitable[T]]]):

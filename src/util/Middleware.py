@@ -21,8 +21,8 @@ class Middleware():
                print("error getting result from middleware, check middleware function, it must return an object with status and  data if status is success, or error if there is an error status ")
                return result
          else:
-            data = method(data)
-            result.build("data",data)
+            dataInner = method(data)
+            result.build("data",dataInner)
             result.build("status","success")
             return result
         except (Exception) as error:

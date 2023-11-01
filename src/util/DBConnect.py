@@ -42,6 +42,11 @@ class DBConnect():
     def getFromConnectedCollection(self, key):
         return self.session.load(key)
     
+    def getWhereFromConnectedCollection(self,key,value):
+         query = self.session.query_collection(self.collectionName).where_equals(key,value)
+         return query.get_query_result().results
+    
+    
     def getAllFromConnectedCollection(self): 
         query = self.session.query_collection(self.collectionName) 
         return query.get_query_result().results
