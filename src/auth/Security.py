@@ -136,6 +136,7 @@ async def read_users_me(
 ):
     user = await get_current_active_user(token)
     print("user from get ", user)
+    user.build("hashed_password",None)
     return user
 
 @router.get("/api/users/me/items/")
