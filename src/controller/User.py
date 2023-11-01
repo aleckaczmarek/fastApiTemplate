@@ -1,5 +1,5 @@
 from src.service.Service import Service
-from src.auth.Security import get_password_hash
+from src.auth.Security import get_password_hash, validate_token
 from src.model.User import User  
 from src.util.HttpUtils import runner, runnerWithData
 from typing import List, Annotated
@@ -17,6 +17,8 @@ async def retrieve_users(token: Annotated[str, Depends(oauth2_scheme)]):
             result.build("error",{"error":"this is the error"})
             return result
    print("token ", token)
+   is_authenticated = await validate_token(token, "user" ,"user:self" )
+   print("is auth ",is_authenticated)
    return await runner(service.getAll,None)
 
 @router.get('/api/users/{userid}/get/',response_model=User)
