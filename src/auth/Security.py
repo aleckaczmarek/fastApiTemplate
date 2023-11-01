@@ -19,25 +19,6 @@ SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-fake_users_db = {
-    "johndoe": {
-    "Id": "3",
-    "first_name": "ajk",
-    "last_name": "kaz",
-    "address_id": 0,
-    "username": "aljk",
-    "email": "aljk@gmail.com",
-    "full_name": "aljk_kaz",
-    "auth": "user",
-    "groups": [
-        "user:self"
-    ],
-    "disabled": False,
-    "collection_name": "users",
-    "hashed_password": "$2b$12$GwFXDLS7wmgmjjGEVQfRdemybVFxv6HIc5soPYbVG.0.UNmpMCd7C",
-    }
-}
-
 class Token(BaseModel):
     access_token: str
     token_type: str
