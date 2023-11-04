@@ -40,24 +40,24 @@ class DBConnect():
             print("key to update ",key)
             print("object to update ", object)
             print("type of object to update ", type(object))
-            document =  self.session.load(object.Id)
+            document =  self.session.load("5")
             print("doc gotten to updatre ", document)
             print("type of doc gotten to updatre ", type(document))
-            # if document == None: 
-            #     print("none found")
-            #     return Result().build("status","error").build("error","No Document Found To Update")
-             
-            for key in object.dict():
-                print("in object mapper ")
-                print("key ", key, " ",object.dict().get(key))
-                if(object.dict().get(key)!=None):
-                    document.build(key,object.dict().get(key))
-            self.session.save_changes()
-            print("success update in db connect")
-            return Result().build("status","success").build("data","Updated Successfully")
-        except (Exception) as error:
-            print("fail db connect ", error) 
-            raise HTTPException(500,"Failed to update document. ")
+            if document == None: 
+                print("none found")
+                raise  HTTPException(500,"No Document Found To Update")
+            else:
+                for key in object.dict():
+                    print("key ", key, " ",object.dict().get(key))
+                    if(object.dict().get(key)!=None):
+                        document.build(key,object.dict().get(key))
+                self.session.save_changes()
+                return Result().build("status","success").build("data","Updated Successfully")
+        except (Exception) as error: 
+            if type(error) == HTTPException: 
+                raise error
+            else:
+                raise HTTPException(500,"Failed to update document.")
 
     def getFromConnectedCollection(self, key):
         return self.session.load(key)
