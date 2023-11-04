@@ -50,8 +50,8 @@ class DBConnect():
             for key in object.dict():
                 print("in object mapper ")
                 print("key ", key, " ",object.dict().get(key))
-                if(object.dict().get(key)==None): break
-                document.build(key,object.dict().get(key))
+                if(object.dict().get(key)!=None):
+                    document.build(key,object.dict().get(key))
             self.session.save_changes()
             print("success update in db connect")
             return Result().build("status","success").build("data","Updated Successfully")
