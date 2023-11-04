@@ -31,13 +31,13 @@ class Service():
        return result
     
     async def getWhere(self,key,value,middleware: Optional[Callable[..., Awaitable[T]]]):
-       def getWhere(data):
-            return self.repo.getWhere(data['key'],data['value'])
+       async def getWhere(data):
+            return await self.repo.getWhere(data['key'],data['value'])
        result =  await self.middlewareRunner({"key":key,"value":value},getWhere,middleware)
        print("result ", result)
        return result
 
-    def delete(self, id,middleware: Optional[Callable[..., Awaitable[T]]]):
+    async def delete(self, id,middleware: Optional[Callable[..., Awaitable[T]]]):
        item = self.model()
        item.build("Id",id)
        def delete(data):
@@ -45,9 +45,11 @@ class Service():
        result =  self.middlewareRunner(item,delete,middleware)
        return result
 
-    def update(self, data, middleware: Optional[Callable[..., Awaitable[T]]]):
-       def update(data):
-            return self.repo.update(data,data.Id)
-       result =  self.middlewareRunner(data,update,middleware)
+    async def update(self, data, middleware: Optional[Callable[..., Awaitable[T]]]):
+       async def update(data):
+            print ("data pre update ", data)
+            return await self.repo.update(data,data.Id)
+       result =  await self.middlewareRunner(data,update,middleware)
+       print("update service result ", result)
        return result
  

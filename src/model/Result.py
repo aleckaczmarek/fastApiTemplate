@@ -9,8 +9,9 @@ class Result(BaseModel):
     middlewareData:Optional[object] = None
 
     def __init__(self,Id=None,status="pending", data={}, middlewareData={},error={}):
-        super().__init__(Id=Id, status=status, data=data, middlewareData=middlewareData,error={})
+        super().__init__(Id=Id, status=status, data=data, middlewareData=middlewareData,error=error)
 
     def build(self,key,value):
         setattr(self,key,value)
+        return self
  

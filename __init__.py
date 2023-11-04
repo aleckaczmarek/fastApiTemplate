@@ -5,7 +5,7 @@ macroMapper/
     Security.py
   src/controller/
     User.py
-  src/repository/
+  src/Repository/
     Repository.py
   src/service/
     Service.py
@@ -13,6 +13,7 @@ macroMapper/
     DBConnect.py
     Middleware.py
     HttpUtils.py
+    Routes.py
   src/model/
     Result.py
     User.py

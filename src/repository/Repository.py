@@ -1,12 +1,14 @@
 import os
 from dotenv import load_dotenv
 from src.util.DBConnect import DBConnect 
+from src.model.Result import Result
 load_dotenv()
 
 class Repository():
     
     def __init__(self, model):
         BASE_DB_URL = os.getenv('BASE_DB_URL')
+        print("base url db connect ", BASE_DB_URL)
         self.db = DBConnect(model, BASE_DB_URL)
         self.db.connectToCollection(model().collection_name)
         self.model=model
@@ -19,13 +21,13 @@ class Repository():
             print(error)
             return False
      
-    def update(self, data, key):
+    async def update(self, data, key):
         try:
-            self.db.updateInConnectedCollection(data, key)
-            return True
-        except (Exception) as error:
-            print(error)
-            return False
+            result =  await self.db.updateInConnectedCollection(data, key) 
+            print ("repo update result ", result)
+            return result
+        except (Exception) as error: 
+            raise error 
     
     def getAll(self): 
         try:
@@ -54,7 +56,7 @@ class Repository():
             print(error)
             return None
         
-    def getWhere(self,key,value):
+    async def getWhere(self,key,value):
         try:
             documents = []
             query = self.db.getWhereFromConnectedCollection(key,value) 

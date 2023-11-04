@@ -1,4 +1,7 @@
+from fastapi import HTTPException
 from ravendb import DocumentStore
+
+from src.model.Result import Result
 
 class DBConnect(): 
     # ie 'http://127.0.0.1:2222'
@@ -32,12 +35,29 @@ class DBConnect():
         self.session.delete(key)
         self.session.save_changes()
     
-    def updateInConnectedCollection(self,object, key):
-        document =  self.session.load(key)
-        for item in object:
-            if(item[1]==None): break
-            setattr(document,item[0],item[1]) 
-        self.session.save_changes()
+    async def updateInConnectedCollection(self,object:type(object), key):
+        try:
+            print("key to update ",key)
+            print("object to update ", object)
+            print("type of object to update ", type(object))
+            document =  self.session.load(object.Id)
+            print("doc gotten to updatre ", document)
+            print("type of doc gotten to updatre ", type(document))
+            # if document == None: 
+            #     print("none found")
+            #     return Result().build("status","error").build("error","No Document Found To Update")
+             
+            for key in object.dict():
+                print("in object mapper ")
+                print("key ", key, " ",object.dict().get(key))
+                if(object.dict().get(key)==None): break
+                document.build(key,object.dict().get(key))
+            self.session.save_changes()
+            print("success update in db connect")
+            return Result().build("status","success").build("data","Updated Successfully")
+        except (Exception) as error:
+            print("fail db connect ", error) 
+            raise HTTPException(500,"Failed to update document. ")
 
     def getFromConnectedCollection(self, key):
         return self.session.load(key)
