@@ -20,3 +20,9 @@ async def runnerWithData(run,data,middleware):
     else:
         return None
     
+
+async def handleError(error, status, message):
+   if type(error) == HTTPException: 
+        raise error
+   else:
+        raise HTTPException(status,message)

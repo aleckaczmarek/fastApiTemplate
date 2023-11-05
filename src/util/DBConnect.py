@@ -2,6 +2,7 @@ from fastapi import HTTPException
 from ravendb import DocumentStore
 
 from src.model.Result import Result
+from src.util.HttpUtils import handleError
 
 class DBConnect(): 
     # ie 'http://127.0.0.1:2222'
@@ -54,10 +55,7 @@ class DBConnect():
                 self.session.save_changes()
                 return Result().build("status","success").build("data","Updated Successfully")
         except (Exception) as error: 
-            if type(error) == HTTPException: 
-                raise error
-            else:
-                raise HTTPException(500,"Failed to update document.")
+            await handleError(error,500,"Failed to update document.")
 
     def getFromConnectedCollection(self, key):
         return self.session.load(key)

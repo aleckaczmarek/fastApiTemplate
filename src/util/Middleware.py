@@ -1,5 +1,6 @@
 from typing import Awaitable, Callable, T, Optional
 from src.model.Result import Result
+from src.util.HttpUtils import handleError
 
 
 class Middleware():  
@@ -31,6 +32,8 @@ class Middleware():
           result.build("data",{})
           result.build("status","error")
           result.build("error",error)
-          print("error getting result from middleware, check middleware function") 
+
+          await handleError(error,500,"Failed to update document.")
+          print("error getting result from middleware, check the method function set to run inside of middleware runner",method) 
           return result
      
