@@ -8,7 +8,7 @@ class Middleware():
         result = Result()
         try:
          if middleware != None:
-            result = await middleware(result,data)
+            result = await middleware(result,data) 
             if(result.status=="success"):
                print("middleware success ", result)
                result.build("middlewareData",result.data)
@@ -23,17 +23,14 @@ class Middleware():
                return result
          else:
             dataInner = await method(data)
-            print("returned from middle ware no middle ware just runner ", dataInner)
+            print("returned runner, no middleware injected")
             result.build("data",dataInner)
             result.build("status","success")
-            print("result return success middleware ", dataInner)
             return dataInner
         except (Exception) as error:
           result.build("data",{})
           result.build("status","error")
           result.build("error",error)
-
-          await handleError(error,500,"Failed to update document.")
           print("error getting result from middleware, check the method function set to run inside of middleware runner",method) 
           return result
      

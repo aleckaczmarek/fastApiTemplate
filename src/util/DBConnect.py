@@ -41,7 +41,7 @@ class DBConnect():
             print("key to update ",key)
             print("object to update ", object)
             print("type of object to update ", type(object))
-            document =  self.session.load("5")
+            document =  self.session.load(key)
             print("doc gotten to updatre ", document)
             print("type of doc gotten to updatre ", type(document))
             if document == None: 

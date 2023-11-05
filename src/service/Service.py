@@ -46,10 +46,9 @@ class Service():
        return result
 
     async def update(self, data, middleware: Optional[Callable[..., Awaitable[T]]]):
-       async def update(data):
-            print ("data pre update ", data)
+       async def update(data): 
             return await self.repo.update(data,data.Id)
        result =  await self.middlewareRunner(data,update,middleware)
-       print("update service result ", result)
+       print("update inside service result ", result)
        return result
  

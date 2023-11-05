@@ -14,7 +14,7 @@ router = APIRouter()
 auth_scheme = HTTPBearer()
 async def setErrorMiddleware(result,data):
             result.build("status","error")
-            result.build("error",{"error":"this is the error"})
+            result.build("error","this is the error")
             return result 
 @router.get('/api/users', response_model=List[User]|None)
 async def retrieve_users( token:HTTPAuthorizationCredentials = Depends(auth_scheme)):
@@ -24,10 +24,6 @@ async def retrieve_users( token:HTTPAuthorizationCredentials = Depends(auth_sche
 
 @router.get('/api/users/{userid}/get/',response_model=User)
 async def get_user(userid):
-   async def setErrorMiddleware(result,data):
-            result.build("status","error")
-            result.build("error",{"error":"this is the error"})
-            return result
    print("user id ",userid)
    return await runnerWithData(service.get,userid,None)
 
@@ -51,4 +47,4 @@ async def update_user(user:User, token:HTTPAuthorizationCredentials = Depends(au
    is_authenticated = await validate_token(token.credentials  )
    print("is auth ",is_authenticated)
    print("user ",user)
-   return await runnerWithData(service.update,user,None) 
+   return await runnerWithData(service.update,user,setErrorMiddleware) 
