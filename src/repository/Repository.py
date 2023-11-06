@@ -1,7 +1,9 @@
 import os
 from dotenv import load_dotenv
+from requests import HTTPError
 from src.util.DBConnect import DBConnect 
 from src.model.Result import Result
+from src.util.HttpUtils import handleError
 load_dotenv()
 
 class Repository():
@@ -27,7 +29,7 @@ class Repository():
             print ("repo update result ", result)
             return result
         except (Exception) as error: 
-            raise error 
+            return await handleError(error, "Error in repo") 
     
     def getAll(self): 
         try:

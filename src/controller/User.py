@@ -4,7 +4,7 @@ from src.auth.Security import get_password_hash, validate_token
 from src.model.User import User  
 from src.util.HttpUtils import runner, runnerWithData
 from typing import List, Annotated
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer, OAuth2PasswordBearer
 from src.util.Routes import Routes
 
@@ -13,9 +13,10 @@ service = Service(User)
 router = APIRouter()
 auth_scheme = HTTPBearer()
 async def setErrorMiddleware(result,data):
-            result.build("status","error")
-            result.build("error","this is the error")
-            return result 
+            # result.build("status","error")
+            # result.build("error","this is the error from middle ware ")
+            raise HTTPException(400,"denied from middleware")
+            # return result 
 @router.get('/api/users', response_model=List[User]|None)
 async def retrieve_users( token:HTTPAuthorizationCredentials = Depends(auth_scheme)):
    is_authenticated = await validate_token(token.credentials, "user" ,"user:self" )
@@ -44,7 +45,7 @@ async def delete_user(userid,token:HTTPAuthorizationCredentials = Depends(auth_s
 
 @router.post('/api/users/update',response_model=Result)
 async def update_user(user:User, token:HTTPAuthorizationCredentials = Depends(auth_scheme)):
-   is_authenticated = await validate_token(token.credentials  )
+   is_authenticated = await validate_token(token.credentials)
    print("is auth ",is_authenticated)
    print("user ",user)
-   return await runnerWithData(service.update,user,setErrorMiddleware) 
+   return await runnerWithData(service.update,user,None) 

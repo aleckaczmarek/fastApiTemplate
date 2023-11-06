@@ -1,5 +1,6 @@
 from fastapi import HTTPException
 from ravendb import DocumentStore
+from requests import HTTPError
 
 from src.model.Result import Result
 from src.util.HttpUtils import handleError
@@ -36,18 +37,21 @@ class DBConnect():
         self.session.delete(key)
         self.session.save_changes()
     
-    async def updateInConnectedCollection(self,object:type(object), key):
-        try:
-            print("key to update ",key)
-            print("object to update ", object)
-            print("type of object to update ", type(object))
-            document =  self.session.load(key)
-            print("doc gotten to updatre ", document)
-            print("type of doc gotten to updatre ", type(document))
-            if document == None: 
+    async def updateInConnectedCollection(self,object, key):
+        try: 
+            document =  self.session.load(key)  
+            print("dco gotten type ", type(document))
+            if  type(document) == None : 
                 print("none found")
+                return await handleError(None,"No Document Found To Update")
                 raise  HTTPException(500,"No Document Found To Update")
-            else:
+            # elif  document == None : 
+            #     print("none found")
+            #     return await handleError(None,"No Document Found To Update")
+            #     raise  HTTPException(500,"No Document Found To Update")
+            else: 
+                print("doc gotten ",document.dict())
+                
                 for key in object.dict():
                     print("key ", key, " ",object.dict().get(key))
                     if(object.dict().get(key)!=None):
@@ -55,7 +59,8 @@ class DBConnect():
                 self.session.save_changes()
                 return Result().build("status","success").build("data","Updated Successfully")
         except (Exception) as error: 
-            await handleError(error,500,"Failed to update document.")
+            print("error db connect ",error)
+            return await handleError(error,"Error Updating Document") # Result().build("status","error").build("error",error)
 
     def getFromConnectedCollection(self, key):
         return self.session.load(key)
@@ -63,7 +68,6 @@ class DBConnect():
     def getWhereFromConnectedCollection(self,key,value):
          query = self.session.query_collection(self.collectionName).where_equals(key,value)
          return query.get_query_result().results
-    
     
     def getAllFromConnectedCollection(self): 
         query = self.session.query_collection(self.collectionName) 
