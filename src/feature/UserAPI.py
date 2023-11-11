@@ -63,8 +63,14 @@ async def update_user(data:Data, token:HTTPAuthorizationCredentials = Depends(au
     
     is_authenticated = await validate_token(token.credentials)
     print("[ User Authorized ] ",is_authenticated)
-    print("[ User ]",user) 
-    return  await runnerWithData(service.update,{"data":user,"token":token.credentials},getUserIdByToken)
+    print("[ Data ]",data)
+    data.build("options", {*data.options, "token",token.credentials})
+    # TODO update downstream path to use data object instead of dict.get methods, 
+    # that way we have consisten builder
+    # and get patterns in the middle ware funciton,
+    # currently runner and non runnder send diff object types which is an issue, 
+    # so this needs to be updated
+    return  await runnerWithData(service.update,data,getUserIdByToken)
     # result.build("middlewareData",{})
     return result 
      
