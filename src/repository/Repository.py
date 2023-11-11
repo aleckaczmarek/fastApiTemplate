@@ -2,14 +2,15 @@ import os
 from dotenv import load_dotenv
 from requests import HTTPError
 from src.util.DBConnect import DBConnect 
-from src.model.Result import Result
-from src.util.HttpUtils import handleError
+from src.transporters.Result import Result
+from src.util.HttpUtils import HttpUtils 
 load_dotenv()
 
 class Repository():
     
     def __init__(self, model):
         BASE_DB_URL = os.getenv('BASE_DB_URL')
+        self.httpUtils = HttpUtils()
         print("base url db connect ", BASE_DB_URL)
         self.db = DBConnect(model, BASE_DB_URL)
         self.db.connectToCollection(model().collection_name)
@@ -29,7 +30,7 @@ class Repository():
             print ("repo update result ", result)
             return result
         except (Exception) as error: 
-            return await handleError(error, "Error in repo") 
+            return await self.httpUtils.handleError(error, "Error in repo") 
     
     def getAll(self): 
         try:

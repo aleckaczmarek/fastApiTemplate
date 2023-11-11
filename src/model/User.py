@@ -25,3 +25,4 @@ class User(BaseModel):
         return self.Id == other.Id and self.first_name == other.first_name and \
             self.last_name == other.last_name and self.address_id == other.address_id and \
                 self.email_address == other.email_address
+    

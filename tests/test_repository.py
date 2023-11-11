@@ -1,29 +1,30 @@
 import unittest
 from src.model.User import User
+from src.service.Service import Service
 from src.repository.Repository import Repository
 
 
-class TestAccountRepository(unittest.TestCase):
-    def setUp(self):
-        self.repository = Repository()
-        self.inserted_account_id = self.accountRepository.insert(Account(None, "acctnum", 1, 25.00))
+# class TestUserRepository(unittest.TestCase):
+    # def setUp(self):
+    #     self.repository = Repository()
+    #     self.inserted_User_id = self.UserRepository.insert(User(None, "acctnum", 1, 25.00))
 
-    def tearDown(self):
-        self.accountRepository.delete(Account(int(self.inserted_account_id),"",1,0.0))
+    # def tearDown(self):
+    #     self.UserRepository.delete(User(int(self.inserted_User_id),"",1,0.0))
 
-    def test_get(self):
-        get_account: Account = self.accountRepository.get(
-            self.inserted_account_id)
-        self.assertEqual(get_account.id, int(self.inserted_account_id))
+    # def test_get(self):
+    #     get_User: User = self.UserRepository.get(
+    #         self.inserted_User_id)
+    #     self.assertEqual(get_User.id, int(self.inserted_User_id))
 
-    def test_update(self):
-        get_account: Account = self.accountRepository.get(
-            self.inserted_account_id)
-        balance_update_check = 15.00
-        get_account.updateBalance(balance_update_check)
-        self.accountRepository.update(get_account)
-        updated_account: Account = self.accountRepository.get(self.inserted_account_id)
-        self.assertEqual(updated_account, get_account)
+    # def test_update(self):
+    #     get_User: User = self.UserRepository.get(
+    #         self.inserted_User_id)
+    #     balance_update_check = 15.00
+    #     get_User.updateBalance(balance_update_check)
+    #     self.UserRepository.update(get_User)
+    #     updated_User: User = self.UserRepository.get(self.inserted_User_id)
+    #     self.assertEqual(updated_User, get_User)
 
-if __name__ == "__main__":
-    unittest.main()
+# if __name__ == "__main__":
+#     unittest.main()

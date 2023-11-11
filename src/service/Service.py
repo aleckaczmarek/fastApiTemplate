@@ -1,15 +1,16 @@
 from requests import HTTPError
 from src.repository.Repository import Repository   
 from src.util.Middleware import Middleware
-from src.model.Result import Result
+from src.transporters.Result import Result
 from typing import Awaitable, Callable, T, Optional
 
-from src.util.HttpUtils import handleError
+from src.util.HttpUtils import HttpUtils
 
 class Service():
 
     def __init__(self, model):
          self.model = model
+         self.httpUtils = HttpUtils()
          self.repo = Repository(model)
          self.middlewareRunner = Middleware().runner
     
@@ -50,10 +51,11 @@ class Service():
 
     async def update(self, data, middleware: Optional[Callable[..., Awaitable[T]]]):
        async def update(data): 
-            return await self.repo.update(data,data.Id)
+            print(" inside service update ", data)
+            return await self.repo.update(data.get("data"),data.get("data").Id)
        try:
           result =  await self.middlewareRunner(data,update,middleware) 
           return result
        except Exception as error:
-          return await handleError(error, "Error in service")
+          return await self.httpUtils.handleError(error, "Error in service")
  

@@ -1,13 +1,13 @@
 from fastapi import HTTPException
-from ravendb import DocumentStore
-from requests import HTTPError
+from ravendb import DocumentStore 
 
-from src.model.Result import Result
-from src.util.HttpUtils import handleError
+from src.transporters.Result import Result
+from src.util.HttpUtils import  HttpUtils
 
 class DBConnect(): 
     # ie 'http://127.0.0.1:2222'
     def __init__(self, model, baseUrl):
+         self.httpUtils = HttpUtils()
          self.model=model
          self.baseUrl=baseUrl
 
@@ -41,13 +41,14 @@ class DBConnect():
         try: 
             document =  self.session.load(key)  
             print("dco gotten type ", type(document))
-            if  type(document) == None : 
+            # todo fix this, for some reason it will not set if not doc is found
+            if  document is None or type(document) == None : 
                 print("none found")
-                return await handleError(None,"No Document Found To Update")
+                return await self.httpUtils.handleError(None,"No Document Found To Update")
                 raise  HTTPException(500,"No Document Found To Update")
             # elif  document == None : 
             #     print("none found")
-            #     return await handleError(None,"No Document Found To Update")
+            #     return await self.httpUtils.handleError(None,"No Document Found To Update")
             #     raise  HTTPException(500,"No Document Found To Update")
             else: 
                 print("doc gotten ",document.dict())
@@ -60,7 +61,7 @@ class DBConnect():
                 return Result().build("status","success").build("data","Updated Successfully")
         except (Exception) as error: 
             print("error db connect ",error)
-            return await handleError(error,"Error Updating Document") # Result().build("status","error").build("error",error)
+            return await self.httpUtils.handleError(error,"Error Updating Document") # Result().build("status","error").build("error",error)
 
     def getFromConnectedCollection(self, key):
         return self.session.load(key)

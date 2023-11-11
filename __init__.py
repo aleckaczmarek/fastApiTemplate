@@ -3,21 +3,21 @@ macroMapper/
   main.py
   src/auth/
     Security.py
-  src/controller/
+  src/feature/
+    UserAPI.py
+  src/model/
     User.py
-  src/Repository/
+  src/repository/
     Repository.py
   src/service/
     Service.py
+  src/transporters/
+    Data.py
+    Result.py
   src/util/
     DBConnect.py
     Middleware.py
     HttpUtils.py
     Routes.py
-  src/model/
-    Result.py
-    User.py
-    User.py
   tests/
-    test_account_repository.py
-    test_address_repository.py
+    test_repository.py

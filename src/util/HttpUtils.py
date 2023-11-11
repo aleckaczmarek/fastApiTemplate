@@ -1,32 +1,30 @@
 from typing import Optional
-from fastapi import HTTPException
+from fastapi import HTTPException 
+from src.transporters.Result import Result
 
-from src.model.Result import Result
+class HttpUtils():
+    async def runner(self,run,middleware):
+        result =  await run(middleware)
+        if result.status=="success":
+            return result
+        elif result.status=="error":
+            return await self.handleError(result, None)
+        else:
+            return None
+        
+    async def runnerWithData(self,run,data,middleware):
+        result =  await run(data,middleware) 
+        if result.status=="success":
+            return result
+        elif result.status=="error": 
+            return await self.handleError(result, None)
+        else:
+            return None
 
-async def runner(run,middleware):
-    result =  await run(middleware)
-    if result.status=="success":
-        return result
-    elif result.status=="error":
-        return await handleError(result, None)
-    else:
-        return None
-    
-async def runnerWithData(run,data,middleware):
-    result =  await run(data,middleware) 
-    if result.status=="success":
-        return result
-    elif result.status=="error": 
-        return await handleError(result, None)
-    else:
-        return None
-    
-
-async def handleError(error, client_error_message:Optional[str]):   
-   print("error ", error)
-   if type(error) != Result:
-       print("build error ", error)
-       return  Result().build("status","error").build("error",error).build("clientErrorMessage",client_error_message)
-   else :
-        print("[ Error Raised ]", error) 
-        raise HTTPException(500, str(error.clientErrorMessage)) 
+    async def handleError(self,error, client_error_message:Optional[str]):   
+        if type(error) != Result:
+            print("[ Exception Returned ]", error)
+            return  Result().build("status","error").build("error",error).build("clientErrorMessage",client_error_message)
+        else :
+                print("[ Error Raised ]", error, client_error_message) 
+                raise HTTPException(500, str(error.clientErrorMessage)) 

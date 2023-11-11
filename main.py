@@ -1,10 +1,10 @@
 import uvicorn
 from fastapi import FastAPI 
-from src.controller import User
+from src.feature.UserAPI import router as user_router
 from src.auth import Security
 
 app = FastAPI()
-app.include_router(User.router)
+app.include_router(user_router)
 app.include_router(Security.router)
 
 if __name__ == "__main__":

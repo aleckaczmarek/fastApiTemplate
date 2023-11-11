@@ -1,18 +1,23 @@
 from typing import Awaitable, Callable, T, Optional
-from src.model.Result import Result
-from src.util.HttpUtils import handleError
+from src.transporters.Result import Result
+from src.util.HttpUtils import HttpUtils
 
 
-class Middleware():  
+class Middleware():
+    def __init__(self): 
+        self.httpUtils = HttpUtils()
+
     async def runner(self,data, method, middleware: Optional[Callable[..., Awaitable[T]]]|None):
         result = Result()
         try:
             if middleware != None:
+                print("[ Middleware ] Starting Runner ", data , type(data) )
                 result = await middleware(result,data) 
+                print("middleware result ", result)
                 if(result.status=="success"):
                     print("middleware success ", result)
                     result.build("middlewareData",result.data)
-                    data =  await method(result.data)
+                    data =  await method(result)
                     result.build("data", data)
                     return result
                 elif(result.status=="error"):
@@ -28,6 +33,6 @@ class Middleware():
                 result.build("status","success")
                 return dataInner
         except (Exception) as error:
-            print("error in middleware runner with middleware as ", middleware) 
-            return await handleError(error, "Error in middleware runner function")
+            print("error in middleware runner with middleware as ", middleware, error) 
+            return await self.httpUtils.handleError(error, "Error in middleware runner function")
      
