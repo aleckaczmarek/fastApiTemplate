@@ -51,20 +51,20 @@ async def delete_user(userid,token:HTTPAuthorizationCredentials = Depends(auth_s
 @router.post('/api/users/update',response_model=Result)
 async def update_user(data:Data, token:HTTPAuthorizationCredentials = Depends(auth_scheme)):
     async def getUserIdByToken(result, data):
-        print("in middleware ",data)
-        user = await get_current_user(data.get("token"))
+        print("in middleware of declaration",data.options)
+        user = await get_current_user(data.options.get("token"))
         print("type of user ", type(user))
-        user_update_req = data['data']
+        user_update_req = data.data
         user_update_req.build("Id", user.Id)
-        data['data'] = user_update_req
-        result.build("data",data)
+        # data.build("data",user_update_req)
+        result.build("data",user_update_req)
         result.build("status","success")
         return result
     
     is_authenticated = await validate_token(token.credentials)
     print("[ User Authorized ] ",is_authenticated)
     print("[ Data ]",data)
-    data.build("options", {*data.options, "token",token.credentials})
+    data.build("options", {**data.options, "token":token.credentials})
     # TODO update downstream path to use data object instead of dict.get methods, 
     # that way we have consisten builder
     # and get patterns in the middle ware funciton,

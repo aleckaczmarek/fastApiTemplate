@@ -16,8 +16,10 @@ class Middleware():
                 print("middleware result ", result)
                 if(result.status=="success"):
                     print("middleware success ", result)
+                    print("middleware returned ", result.data)
                     result.build("middlewareData",result.data)
-                    data =  await method(result)
+                    data =  await method(result.data)
+                    print("method returned from middle ware with data ",data)
                     result.build("data", data)
                     return result
                 elif(result.status=="error"):

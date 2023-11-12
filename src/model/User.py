@@ -10,7 +10,7 @@ class User(BaseModel):
     email: Optional[str] = None
     full_name: Optional[str] = None
     auth: Optional[str] = None
-    groups: List[str] = []
+    groups: Optional[List[str]] = None
     disabled: Optional[bool] = None
     collection_name:Optional[str]  = "users"
     hashed_password: Optional[str] = None
@@ -25,4 +25,3 @@ class User(BaseModel):
         return self.Id == other.Id and self.first_name == other.first_name and \
             self.last_name == other.last_name and self.address_id == other.address_id and \
                 self.email_address == other.email_address
-    

@@ -5,6 +5,7 @@ from src.transporters.Result import Result
 from typing import Awaitable, Callable, T, Optional
 
 from src.util.HttpUtils import HttpUtils
+from src.transporters.Data import Data
 
 class Service():
 
@@ -52,7 +53,11 @@ class Service():
     async def update(self, data, middleware: Optional[Callable[..., Awaitable[T]]]):
        async def update(data): 
             print(" inside service update ", data)
-            return await self.repo.update(data.get("data"),data.get("data").Id)
+            print("type of data ", type(data))
+            if type(data) == Data:
+               return await self.repo.update(data.data,data.data.Id)
+            else:
+               return await self.repo.update(data,data.Id)
        try:
           result =  await self.middlewareRunner(data,update,middleware) 
           return result

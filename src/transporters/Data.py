@@ -1,13 +1,14 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Union
+from src.model.User import User
+from src.transporters.Result import Result 
 
 class Data(BaseModel):
-    Id: Optional[int|str] = None
-    data: Optional[object] = None
-    options: Optional[object] = None
-
-    def __init__(self,Id=None,  data={}, options={}):
-        super().__init__(Id=Id,  data=data, options=options)
+    data:  Optional[Union[User, Result]] = None
+    options: Optional[dict] = None
+    
+    def __init__(self, data={}, options={}):
+        super().__init__(data=data, options=options)
 
     def build(self,key,value):
         setattr(self,key,value)
