@@ -8,18 +8,29 @@ from src.util.HttpUtils import HttpUtils
 from src.transporters.Data import Data
 
 class Service():
-
+   
     def __init__(self, model):
          self.model = model
          self.httpUtils = HttpUtils()
          self.repo = Repository(model)
          self.middlewareRunner = Middleware().runner
     
-    def create(self,data,middleware: Optional[Callable[..., Awaitable[T]]]):
-       def create(data):
-            return self.repo.add(data)
-       result =  self.middlewareRunner(data,create,middleware)
-       return result
+    async def create(self,data,middleware: Optional[Callable[..., Awaitable[T]]]):
+       async def create(data):
+            print("in service create ", data)
+            if type(data) == Data:
+               print("in data type Data ")
+               return await self.repo.add(data.data)
+            else:
+               return await self.repo.add(data)
+             
+       try:
+          result = await self.middlewareRunner(data,create,middleware)
+          print("result create service", result)
+          return result
+       except Exception as error:
+          return await self.httpUtils.handleError(error, "Error in service")
+      
 
     async def getAll(self,middleware: Optional[Callable[..., Awaitable[T]]]):
        def getAll(data):
@@ -38,9 +49,14 @@ class Service():
     async def getWhere(self,key,value,middleware: Optional[Callable[..., Awaitable[T]]]):
        async def getWhere(data):
             return await self.repo.getWhere(data['key'],data['value'])
-       result =  await self.middlewareRunner({"key":key,"value":value},getWhere,middleware)
-       print("result ", result)
-       return result
+      
+       try:
+          result = await self.middlewareRunner({"key":key,"value":value},getWhere,middleware)
+          print("result getWhere service", result)
+          return result
+       except Exception as error:
+          return await self.httpUtils.handleError(error, "Error in service")
+  
 
     async def delete(self, id,middleware: Optional[Callable[..., Awaitable[T]]]):
        item = self.model()

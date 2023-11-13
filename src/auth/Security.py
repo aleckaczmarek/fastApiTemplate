@@ -10,10 +10,11 @@ from pydantic import BaseModel
 from src.model.User import User 
 from src.service.Service import Service
 from src.util.Routes import Routes
+from src.transporters.Data import Data
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=Routes.OAuth2PasswordBearer_Token_URL) 
 router = APIRouter()
-user_service = Service(User)
+user_service = Service(User) 
 # to get a string like this run:
 # openssl rand -hex 32
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
@@ -42,17 +43,23 @@ def verify_password(plain_password, hashed_password):
 def get_password_hash(password):
     return pwd_context.hash(password)
 
-async def get_user(username: str):
+async def get_user_security(username: str):
+    response = None 
     response = await user_service.getWhere("username",username,None)
-    print("respone in get user ", response)
-    return User(**response[0].dict())
+    print("respone in get user", response)
+    if len(response) == 0:
+        return None
+    user =  User(**response[0].dict()) 
+    return user
 
 async def authenticate_user(username: str, password: str): 
-    user = await get_user(username)
+    user = await get_user_security(username)
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
         return False
+    print("auth user")
+    user.build("hashed_password",None)
     return user
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
@@ -78,7 +85,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         print("token data ",token_data)
     except JWTError:
         raise credentials_exception
-    user = await get_user(username=token_data.username) 
+    user = await get_user_security(username=token_data.username) 
     if user is None:
         raise credentials_exception
     return user 

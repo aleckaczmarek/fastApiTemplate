@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException 
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer, OAuth2PasswordBearer
 from typing import List
 from src.transporters.Data import Data
+from src.auth.Security import get_user_security
 from src.transporters.Result import Result
 from src.service.Service import Service
 from src.auth.Security import get_current_user, get_password_hash, validate_token
@@ -11,7 +12,7 @@ from src.model.User import User
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=Routes.OAuth2PasswordBearer_Token_URL)
-service = Service(User) 
+service = Service(User)  
 router = APIRouter()
 auth_scheme = HTTPBearer()
 httpUtils = HttpUtils()
@@ -33,15 +34,31 @@ async def get_user(userid):
     print("user id ",userid)
     return await runnerWithData(service.get,userid,None)
 
-@router.post('/api/users/create')
-async def create_user(user:User,password:str):
+@router.post('/api/users/create',response_model=Result)
+async def create_user(data:Data,password:str):
+    async def denyIfUserExists(result, data):
+        print("user deny middleware ",data)
+        user = await get_user_security(data.data.username)
+        print("user here ", type(user))
+        if user :
+            print("user found ", user)
+            result.build("status","error")
+            result.build("clientErrorMessage", "Invalid username.")
+            result.build("error","Invalid username.")
+            return result
+        else:
+            print("user not found ")
+            result.build("data",data.data)
+            result.build("status","success")
+            return result
     print("Starting ")
-    userToCreate= User(**user.dict())
+    userToCreate= User(**data.data.dict())
     print("created, ", userToCreate)
     print("password ",password)
     hashedPassword = get_password_hash(password)
     userToCreate.build("hashed_password",hashedPassword)
-    return await runnerWithData(service.create,userToCreate,None)
+    data.build("data",userToCreate)
+    return await runnerWithData(service.create,data,denyIfUserExists)
 
 @router.get('/api/users/delete/{userid}')
 async def delete_user(userid,token:HTTPAuthorizationCredentials = Depends(auth_scheme)):
@@ -56,6 +73,12 @@ async def update_user(data:Data, token:HTTPAuthorizationCredentials = Depends(au
         print("type of user ", type(user))
         user_update_req = data.data
         user_update_req.build("Id", user.Id)
+        #Prevent password update
+        user_update_req.build("hashed_password",None)
+        #Prevent admin update
+        user_update_req.build("auth",None)
+        #Prevent groups update
+        user_update_req.build("groups",None)
         result.build("data",user_update_req)
         result.build("status","success")
         return result

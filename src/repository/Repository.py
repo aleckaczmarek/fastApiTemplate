@@ -16,13 +16,13 @@ class Repository():
         self.db.connectToCollection(model().collection_name)
         self.model=model
     
-    def add(self, data):
+    async def add(self, data):
         try:
-            self.db.addToConnectedCollection(data,data.Id)
-            return True
+            print("in try add about ")
+            result = await self.db.addToConnectedCollection(data,data.Id)
+            return result
         except (Exception) as error:
-            print(error)
-            return False
+             return await self.httpUtils.handleError(error, "Error in repo") 
      
     async def update(self, data, key):
         try:

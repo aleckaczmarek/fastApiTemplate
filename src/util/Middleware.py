@@ -1,4 +1,6 @@
 from typing import Awaitable, Callable, T, Optional
+
+from fastapi import HTTPException
 from src.transporters.Result import Result
 from src.util.HttpUtils import HttpUtils
 
@@ -18,12 +20,13 @@ class Middleware():
                     print("middleware success ", result)
                     print("middleware returned ", result.data)
                     result.build("middlewareData",result.data)
-                    data =  await method(result.data)
+                    data.build("data", result.data)
+                    data =  await method(data)
                     print("method returned from middle ware with data ",data)
                     result.build("data", data)
                     return result
                 elif(result.status=="error"):
-                    print("middleware error ", result)
+                    print("middleware error ", result) 
                     return result
                 else:
                     print("error getting result from middleware, check middleware function, it must return an object with status and  data if status is success, or error if status is an error ")

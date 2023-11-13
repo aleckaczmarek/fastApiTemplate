@@ -28,9 +28,15 @@ class DBConnect():
         self.session.close()
         self.store.close()
 
-    def addToConnectedCollection(self,object, key):
-        self.session.store(object, key) 
-        self.session.save_changes()
+    async def addToConnectedCollection(self,object, key):
+        try: 
+            self.session.store(object, key) 
+            self.session.save_changes() 
+
+            return Result().build("status","success").build("data","Created Successfully")
+        except (Exception) as error: 
+            print("error db connect ",error)
+            return await self.httpUtils.handleError(error,"Error Creating ")
 
     def deleteFromConnectedCollection(self, key):
         document =  self.session.load(key)
@@ -41,18 +47,11 @@ class DBConnect():
         try: 
             document =  self.session.load(key)  
             print("dco gotten type ", type(document))
-            # todo fix this, for some reason it will not set if not doc is found
             if  document is None or type(document) == None : 
                 print("none found")
                 return await self.httpUtils.handleError(None,"No Document Found To Update")
-                raise  HTTPException(500,"No Document Found To Update")
-            # elif  document == None : 
-            #     print("none found")
-            #     return await self.httpUtils.handleError(None,"No Document Found To Update")
-            #     raise  HTTPException(500,"No Document Found To Update")
             else: 
-                print("doc gotten ",document.dict())
-                
+                print("doc gotten ",document.dict()) 
                 for key in object.dict():
                     print("key ", key, " ",object.dict().get(key))
                     if(object.dict().get(key)!=None):
