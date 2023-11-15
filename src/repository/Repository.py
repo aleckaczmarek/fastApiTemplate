@@ -37,6 +37,7 @@ class Repository():
             documents = []
             response = await self.db.getAllFromConnectedCollection()
             print("getAll in repo ", response)
+            #TODO update so we can get filter list from model directly, make filter list uneditable by builder 
             for doc in response.data.get("query"):
                 del doc['@metadata'] 
                 del doc['hashed_password'] 

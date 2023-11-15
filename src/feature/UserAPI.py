@@ -19,7 +19,7 @@ httpUtils = HttpUtils()
 runner = httpUtils.runner
 runnerWithData = httpUtils.runnerWithData
 
-   
+
 async def setErrorMiddleware(result,data):
     raise HTTPException(400,"denied from middleware")
 
