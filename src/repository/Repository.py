@@ -32,17 +32,20 @@ class Repository():
         except (Exception) as error: 
             return await self.httpUtils.handleError(error, "Error in repo") 
     
-    def getAll(self): 
+    async def getAll(self): 
         try:
             documents = []
-            query = self.db.getAllFromConnectedCollection()
-            for doc in query:
+            response = await self.db.getAllFromConnectedCollection()
+            print("getAll in repo ", response)
+            for doc in response.data.get("query"):
                 del doc['@metadata'] 
+                del doc['hashed_password'] 
                 newDoc = self.model()
                 for key in doc:
                     newDoc.build(key,doc[key])
                 documents.append(newDoc) 
-            return documents
+            response.build("data",{"query":documents})
+            return response
         except (Exception) as error:
             print("error repo")
             print(error)

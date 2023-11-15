@@ -5,6 +5,7 @@ from src.transporters.Result import Result
 class HttpUtils():
     async def runner(self,run,middleware):
         result =  await run(middleware)
+        print("result in http utils ", result)
         if result.status=="success":
             return result
         elif result.status=="error":

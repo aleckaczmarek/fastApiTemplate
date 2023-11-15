@@ -33,8 +33,8 @@ class Service():
       
 
     async def getAll(self,middleware: Optional[Callable[..., Awaitable[T]]]):
-       def getAll(data):
-            return self.repo.getAll()
+       async def getAll(data):
+            return await self.repo.getAll()
        result =  await self.middlewareRunner(None,getAll,middleware)
        return result
 

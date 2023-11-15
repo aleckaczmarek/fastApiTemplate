@@ -49,7 +49,7 @@ class DBConnect():
             print("dco gotten type ", type(document))
             if  document is None or type(document) == None : 
                 print("none found")
-                return await self.httpUtils.handleError(None,"No Document Found To Update")
+                return await self.httpUtils.handleError(None,"No Document Found To Update DBConnect")
             else: 
                 print("doc gotten ",document.dict()) 
                 for key in object.dict():
@@ -60,7 +60,7 @@ class DBConnect():
                 return Result().build("status","success").build("data","Updated Successfully")
         except (Exception) as error: 
             print("error db connect ",error)
-            return await self.httpUtils.handleError(error,"Error Updating Document") # Result().build("status","error").build("error",error)
+            return await self.httpUtils.handleError(error,"Error Updating Document DBConnect") # Result().build("status","error").build("error",error)
 
     def getFromConnectedCollection(self, key):
         return self.session.load(key)
@@ -69,9 +69,15 @@ class DBConnect():
          query = self.session.query_collection(self.collectionName).where_equals(key,value)
          return query.get_query_result().results
     
-    def getAllFromConnectedCollection(self): 
-        query = self.session.query_collection(self.collectionName) 
-        return query.get_query_result().results
+    async def getAllFromConnectedCollection(self): 
+        try: 
+            query = self.session.query_collection(self.collectionName)  
+            results = query.get_query_result().results
+            return Result().build("status","success").build("data",{"query":results})
+        except (Exception) as error: 
+            print("error db connect get all ",error)
+            return await self.httpUtils.handleError(error,"Error Getting All DBConnect")
+       
 
     def addToCollection(self, collectionName, object, key):
         self.connectToCollection(self,collectionName)

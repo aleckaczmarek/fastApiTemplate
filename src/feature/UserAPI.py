@@ -23,10 +23,9 @@ runnerWithData = httpUtils.runnerWithData
 async def setErrorMiddleware(result,data):
     raise HTTPException(400,"denied from middleware")
 
-@router.get('/api/users', response_model=List[User]|None)
+@router.get('/api/users', response_model=Result|None)
 async def retrieve_users( token:HTTPAuthorizationCredentials = Depends(auth_scheme)):
-    is_authenticated = await validate_token(token.credentials, "user" ,"user:self" )
-    print("is auth ",is_authenticated)
+    await validate_token(token.credentials, "user" ,"user:self" )
     return await runner(service.getAll,None)
 
 @router.get('/api/users/{userid}/get/',response_model=User)
@@ -82,9 +81,7 @@ async def update_user(data:Data, token:HTTPAuthorizationCredentials = Depends(au
         result.build("data",user_update_req)
         result.build("status","success")
         return result
-    
-    is_authenticated = await validate_token(token.credentials)
-    print("[ User Authorized ] ",is_authenticated)
+    await validate_token(token.credentials)
     print("[ Data ]",data)
     data.build("options", {**data.options, "token":token.credentials})
     return  await runnerWithData(service.update,data,getUserIdByToken)

@@ -112,8 +112,10 @@ async def validate_token(token: Annotated[str, Depends(oauth2_scheme)],allowed_a
             raise credentials_exception
         if allowed_groups is not None and groups is not None and groups not in allowed_groups :
             raise credentials_exception
+        print("[ Authorized ]",{"valid":True})
         return {"valid":True}
     except JWTError:
+        print("[ Authorized ]",{"valid":False})
         raise credentials_exception
 
 async def get_current_active_user(
