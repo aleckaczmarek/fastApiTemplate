@@ -101,7 +101,9 @@ def get_token(header):
 async def validate_token(token: Annotated[str, Depends(oauth2_scheme)],allowed_auth:Optional[str]=None,allowed_groups:Optional[str]=None):
     credentials_exception = CredentialsException().exception
     try: 
+        print("pre decode ")
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        print("post decode ")
         username: str = payload.get("sub")
         auth:str = payload.get("auth")
         groups:List[str] = payload.get("groups")
@@ -110,8 +112,17 @@ async def validate_token(token: Annotated[str, Depends(oauth2_scheme)],allowed_a
             raise credentials_exception
         if allowed_auth is not None and auth is not None and auth not in allowed_auth :
             raise credentials_exception
-        if allowed_groups is not None and groups is not None and groups not in allowed_groups :
-            raise credentials_exception
+        access = False
+        print("allowed groups ", allowed_groups)
+        print("groups ", groups)
+        while access is False:
+            for group in allowed_groups:
+                print("group ", group)
+                if group is not None and groups is not None and group  in groups :
+                    access = True 
+            if access is False:
+                raise credentials_exception
+        
         print("[ Authorized ]",{"valid":True})
         return {"valid":True}
     except JWTError:

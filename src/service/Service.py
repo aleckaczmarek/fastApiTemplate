@@ -35,16 +35,25 @@ class Service():
     async def getAll(self,middleware: Optional[Callable[..., Awaitable[T]]]):
        async def getAll(data):
             return await self.repo.getAll()
-       result =  await self.middlewareRunner(None,getAll,middleware)
-       return result
+       try:
+            result =  await self.middlewareRunner(None,getAll,middleware)
+            return result
+       except Exception as error:
+            return await self.httpUtils.handleError(error, "Error in service get all")
 
-    async def get(self,id,middleware: Optional[Callable[..., Awaitable[T]]]):
-       item = self.model()
-       item.build("Id",id)
-       def get(data):
-            return self.repo.get(data.Id)
-       result =  await self.middlewareRunner(item,get,middleware)
-       return result
+    async def get(self,data,middleware: Optional[Callable[..., Awaitable[T]]]):
+       async def get(data):
+         if type(data) == Data:
+            print("in data type Data " ,data.data.Id)
+            return await self.repo.get(data.data.Id)
+         else:
+            print("in non type Data ", data)
+            return await self.repo.get(data.Id)
+       try:
+            result =  await self.middlewareRunner(data,get,middleware)
+            return result
+       except Exception as error:
+            return await self.httpUtils.handleError(error, "Error in service get")
     
     async def getWhere(self,key,value,middleware: Optional[Callable[..., Awaitable[T]]]):
        async def getWhere(data):

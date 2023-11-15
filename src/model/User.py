@@ -20,6 +20,7 @@ class User(BaseModel):
         
     def build(self,key,value):
         setattr(self,key,value)
+        return self
 
     def __eq__(self, other):
         return self.Id == other.Id and self.first_name == other.first_name and \

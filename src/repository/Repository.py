@@ -52,13 +52,15 @@ class Repository():
             print(error)
             return None
 
-    def get(self, id):
+    async def get(self, id):
         try:
-            document = self.db.getFromConnectedCollection(id)
+            response = await self.db.getFromConnectedCollection(id)
             newDoc = self.model()
-            for item in document:
-                newDoc.build(item[0],item[1])
-            return document
+            print("new doc ", newDoc)
+            for doc in response.data.get("query"): 
+                newDoc.build(doc[0],doc[1])
+            response.build("data",{"query":newDoc})
+            return response
         except (Exception) as error:
             print(error)
             return None

@@ -23,15 +23,22 @@ runnerWithData = httpUtils.runnerWithData
 async def setErrorMiddleware(result,data):
     raise HTTPException(400,"denied from middleware")
 
-@router.get('/api/users', response_model=Result|None)
-async def retrieve_users( token:HTTPAuthorizationCredentials = Depends(auth_scheme)):
-    await validate_token(token.credentials, "user" ,"user:self" )
+@router.get('/api/users', response_model=Result)
+async def retrieve_users(token:HTTPAuthorizationCredentials = Depends(auth_scheme)):
+    await validate_token(token.credentials, "user" ,["admin:read","user:self", "admin:all"] )
     return await runner(service.getAll,None)
 
-@router.get('/api/users/{userid}/get/',response_model=User)
-async def get_user(userid):
-    print("user id ",userid)
-    return await runnerWithData(service.get,userid,None)
+@router.get('/api/users/get/{userid}',response_model=Result)
+async def get_user(userid,token:HTTPAuthorizationCredentials = Depends(auth_scheme)): 
+    print("token ",token)
+    print("userid ",userid)
+    await validate_token(token.credentials,"user" ,["admin:read","user:self", "admin:all"]) 
+    #TODO add middleware to filter out access say if token user id does not match user id and group admin does not exist etc
+    user = User().build("Id",userid)
+    data = Data().build("data",user)
+    print("data get ",data)
+    return await runnerWithData(service.get,data,None)
+
 
 @router.post('/api/users/create',response_model=Result)
 async def create_user(data:Data,password:str):

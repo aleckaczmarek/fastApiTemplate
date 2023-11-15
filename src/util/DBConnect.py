@@ -62,8 +62,13 @@ class DBConnect():
             print("error db connect ",error)
             return await self.httpUtils.handleError(error,"Error Updating Document DBConnect") # Result().build("status","error").build("error",error)
 
-    def getFromConnectedCollection(self, key):
-        return self.session.load(key)
+    async def getFromConnectedCollection(self, key):
+        try: 
+            results = self.session.load(key)
+            return Result().build("status","success").build("data",{"query":results})
+        except (Exception) as error: 
+            print("error db connect get ",error)
+            return await self.httpUtils.handleError(error,"Error Getting User DBConnect")
     
     def getWhereFromConnectedCollection(self,key,value):
          query = self.session.query_collection(self.collectionName).where_equals(key,value)
