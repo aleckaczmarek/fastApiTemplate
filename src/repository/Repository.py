@@ -20,6 +20,7 @@ class Repository():
         try:
             print("in try add about ")
             result = await self.db.addToConnectedCollection(data,data.Id)
+            print("result from addToConnectedCOllection in repo ", result)
             return result
         except (Exception) as error:
              return await self.httpUtils.handleError(error, "Error in repo") 

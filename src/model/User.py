@@ -9,7 +9,7 @@ class User(BaseModel):
     username: Optional[str] = None
     email: Optional[str] = None
     full_name: Optional[str] = None
-    auth: Optional[str] = None
+    auths: Optional[List[str]] = None
     groups: Optional[List[str]] = None
     disabled: Optional[bool] = None
     collection_name:Optional[str]  = "users"

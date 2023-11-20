@@ -25,21 +25,21 @@ async def setErrorMiddleware(result,data):
 
 @router.get('/api/users', response_model=Result)
 async def retrieve_users(token:HTTPAuthorizationCredentials = Depends(auth_scheme)):
-    await validate_token(token.credentials, "user" ,["admin:read","user:self", "admin:all"] )
+    await validate_token(token.credentials  )
     return await runner(service.getAll,None)
 
 @router.get('/api/users/get/{userid}',response_model=Result)
 async def get_user(userid,token:HTTPAuthorizationCredentials = Depends(auth_scheme)): 
     print("token ",token)
     print("userid ",userid)
-    await validate_token(token.credentials,"user" ,["admin:read","user:self", "admin:all"]) 
+    await validate_token(token.credentials, ) 
     #TODO add middleware to filter out access say if token user id does not match user id and group admin does not exist etc
     user = User().build("Id",userid)
     data = Data().build("data",user)
     print("data get ",data)
     return await runnerWithData(service.get,data,None)
 
-
+#TODO need to fix this 
 @router.post('/api/users/create',response_model=Result)
 async def create_user(data:Data,password:str):
     async def denyIfUserExists(result, data):
@@ -74,15 +74,16 @@ async def delete_user(userid,token:HTTPAuthorizationCredentials = Depends(auth_s
 @router.post('/api/users/update',response_model=Result)
 async def update_user(data:Data, token:HTTPAuthorizationCredentials = Depends(auth_scheme)):
     async def getUserIdByToken(result, data):
-        print("in middleware of declaration",data.options)
+        print("in middleware of declaration",data)
         user = await get_current_user(data.options.get("token"))
         print("type of user ", type(user))
         user_update_req = data.data
         user_update_req.build("Id", user.Id)
+        user_update_req.build("full_name", user.first_name+" "+user.last_name)
         #Prevent password update
         user_update_req.build("hashed_password",None)
         #Prevent admin update
-        user_update_req.build("auth",None)
+        user_update_req.build("auths",None)
         #Prevent groups update
         user_update_req.build("groups",None)
         result.build("data",user_update_req)

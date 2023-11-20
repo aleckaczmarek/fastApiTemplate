@@ -32,7 +32,6 @@ class DBConnect():
         try: 
             self.session.store(object, key) 
             self.session.save_changes() 
-
             return Result().build("status","success").build("data","Created Successfully")
         except (Exception) as error: 
             print("error db connect ",error)

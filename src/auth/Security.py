@@ -98,31 +98,40 @@ def get_token(header):
         raise CredentialsException().exception
     return token
 
-async def validate_token(token: Annotated[str, Depends(oauth2_scheme)],allowed_auth:Optional[str]=None,allowed_groups:Optional[str]=None):
+async def validate_token(token: Annotated[str, Depends(oauth2_scheme)],allowed_auths:Optional[str]=None,allowed_groups:Optional[str]=None):
     credentials_exception = CredentialsException().exception
     try: 
         print("pre decode ")
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         print("post decode ")
         username: str = payload.get("sub")
-        auth:str = payload.get("auth")
+        auths:List[str] = payload.get("auths")
         groups:List[str] = payload.get("groups")
         groups = ' '.join(str(g)for g in groups)
+        auths = ' '.join(str(a)for a in auths)
         if username is None:
-            raise credentials_exception
-        if allowed_auth is not None and auth is not None and auth not in allowed_auth :
-            raise credentials_exception
-        access = False
+            raise credentials_exception 
+        
         print("allowed groups ", allowed_groups)
+        print("allowed auths ", allowed_auths)
         print("groups ", groups)
+        access = False
+        if allowed_auths is None and allowed_groups is None:
+            access = True
         while access is False:
-            for group in allowed_groups:
-                print("group ", group)
-                if group is not None and groups is not None and group  in groups :
-                    access = True 
+            print("starting group search ")
+            if  allowed_groups is not None:
+                for group in allowed_groups:
+                    print("group ", group)
+                    if group is not None and groups is not None and group  in groups :
+                        access = True 
+            if  allowed_auths is not None:
+                for auth in allowed_auths:
+                    print("group ", auth)
+                    if auth is not None and auths is not None and auth in auths :
+                        access = True 
             if access is False:
                 raise credentials_exception
-        
         print("[ Authorized ]",{"valid":True})
         return {"valid":True}
     except JWTError:
@@ -150,7 +159,7 @@ async def login_for_access_token(
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.username, "auth":user.auth, "groups":user.groups, "email":user.email}, expires_delta=access_token_expires
+        data={"sub": user.username, "auths":user.auths, "groups":user.groups, "email":user.email}, expires_delta=access_token_expires
     )
     # TODO add cookie response here for session 
     return {"access_token":access_token,"token_type":"bearer"}
