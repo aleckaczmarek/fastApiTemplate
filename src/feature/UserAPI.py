@@ -33,42 +33,41 @@ async def get_user(userid,token:HTTPAuthorizationCredentials = Depends(auth_sche
     print("token ",token)
     print("userid ",userid)
     await validate_token(token.credentials, ) 
-    #TODO add middleware to filter out access say if token user id does not match user id and group admin does not exist etc
+    #TODO add middleware to filter out access say if token user 
+    # id does not match user id and group admin does not exist etc
+    # any user can get any user currently
     user = User().build("Id",userid)
     data = Data().build("data",user)
     print("data get ",data)
     return await runnerWithData(service.get,data,None)
 
-#TODO need to fix this 
 @router.post('/api/users/create',response_model=Result)
 async def create_user(data:Data,password:str):
     async def denyIfUserExists(result, data):
-        print("user deny middleware ",data)
-        user = await get_user_security(data.data.username)
-        print("user here ", type(user))
+        user = await get_user_security(data.data.username) 
         if user :
             print("user found ", user)
             result.build("status","error")
             result.build("clientErrorMessage", "Invalid username.")
             result.build("error","Invalid username.")
             return result
-        else:
-            print("user not found ")
+        else: 
+            totalusers = await runner(service.getAll,None) 
+            data.data.build("Id",str(len(totalusers.data.get("query"))))
             result.build("data",data.data)
             result.build("status","success")
             return result
-    print("Starting ")
     userToCreate= User(**data.data.dict())
-    print("created, ", userToCreate)
-    print("password ",password)
-    hashedPassword = get_password_hash(password)
-    userToCreate.build("hashed_password",hashedPassword)
+    userToCreate.build("hashed_password",get_password_hash(password))
     data.build("data",userToCreate)
     return await runnerWithData(service.create,data,denyIfUserExists)
-
+# TODO currently not working, needs fixing post data struc change
 @router.get('/api/users/delete/{userid}')
 async def delete_user(userid,token:HTTPAuthorizationCredentials = Depends(auth_scheme)):
     await validate_token(token.credentials)
+    #TODO add middleware to filter out access say if token user 
+    # id does not match user id and group admin does not exist etc
+    # any user can delete any user currently
     return await runnerWithData(service.delete,userid,None)  
 
 @router.post('/api/users/update',response_model=Result)
@@ -76,6 +75,9 @@ async def update_user(data:Data, token:HTTPAuthorizationCredentials = Depends(au
     async def getUserIdByToken(result, data):
         print("in middleware of declaration",data)
         user = await get_current_user(data.options.get("token"))
+        if(data.data.Id != user.Id):
+            print("[ ERROR ] IDS DO NOT MATCH")
+            return result.build("data",data.data).build("status","error")
         print("type of user ", type(user))
         user_update_req = data.data
         user_update_req.build("Id", user.Id)

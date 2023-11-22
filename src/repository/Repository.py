@@ -82,9 +82,9 @@ class Repository():
             print(error)
             return None
 
-    def delete(self, id):
+    async def delete(self, id):
         try:
-            self.db.deleteFromConnectedCollection(id)
+            await self.db.deleteFromConnectedCollection(id)
             return True
         except (Exception) as error:
             print(error)

@@ -70,8 +70,8 @@ class Service():
     async def delete(self, id,middleware: Optional[Callable[..., Awaitable[T]]]):
        item = self.model()
        item.build("Id",id)
-       def delete(data):
-            return self.repo.delete(data.Id)
+       async def delete(data):
+            return await self.repo.delete(data.Id)
        result =  self.middlewareRunner(item,delete,middleware)
        return result
 

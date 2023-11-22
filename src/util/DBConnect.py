@@ -37,7 +37,7 @@ class DBConnect():
             print("error db connect ",error)
             return await self.httpUtils.handleError(error,"Error Creating ")
 
-    def deleteFromConnectedCollection(self, key):
+    async def deleteFromConnectedCollection(self, key):
         document =  self.session.load(key)
         self.session.delete(key)
         self.session.save_changes()
