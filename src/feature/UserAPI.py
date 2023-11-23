@@ -77,7 +77,7 @@ async def update_user(data:Data, token:HTTPAuthorizationCredentials = Depends(au
         user = await get_current_user(data.options.get("token"))
         if(data.data.Id != user.Id):
             print("[ ERROR ] IDS DO NOT MATCH")
-            return result.build("data",data.data).build("status","error")
+            return result.build("data",{}).build("status","error").build("error","IDS DO NOT MATCH")
         print("type of user ", type(user))
         user_update_req = data.data
         user_update_req.build("Id", user.Id)
