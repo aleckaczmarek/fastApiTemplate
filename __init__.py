@@ -16,6 +16,7 @@ macroMapper/
     Result.py
   src/util/
     DBConnect.py
+    General.py
     Middleware.py
     HttpUtils.py
     Routes.py

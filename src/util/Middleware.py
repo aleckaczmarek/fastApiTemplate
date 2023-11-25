@@ -1,6 +1,6 @@
 from typing import Awaitable, Callable, T, Optional
-
 from fastapi import HTTPException
+
 from src.transporters.Result import Result
 from src.util.HttpUtils import HttpUtils
 
@@ -25,7 +25,7 @@ class Middleware():
                     print("method returned from middle ware with data ",data)
                     result.build("data", data)
                     return result
-                elif(result.status=="error" and result.clientErrorMessage is not None):
+                elif(result.status=="error" and result.clientErrorMessage is not None and len(result.clientErrorMessage)  > 0 ):
                     # TODO find out how to check if dict is empty so none check above can be correct
                     print("type of clienterrormessage ",type(result.clientErrorMessage))
                     print("middleware error ", result) 
