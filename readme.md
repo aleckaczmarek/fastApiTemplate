@@ -16,3 +16,12 @@ fastapi model based service repo data store with ravendb as nosql data store
 - pip3 install requirements.txt
 - pip3 install "python-jose[cryptography]" v = 3.4.0
 - pip3 install "passlib[bcrypt]" v = 4.0.1
+
+ 
+ 
+
+Todos,
+
+Adjust so util files only use functions, no need for classes. Explore separation into another module so we can import static single instances of it.
+
+Find a tool to analyze the performance of the code when hit with a ton of concurrent requests.
