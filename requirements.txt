@@ -1,8 +1,6 @@
 fastapi==0.89.1
 pydantic==1.10.4
-# might not need this one below, keeping for now
-# for connecting to postgress, not recommended for prod apps though
-# psycopg2-binary==2.9.2
+
 #https://github.com/ravendb/ravendb-python-client
 ravendb==5.2.4
 starlette==0.22.0
