@@ -1,5 +1,4 @@
-from typing import Awaitable, Callable, T, Optional
-from fastapi import HTTPException
+from typing import Awaitable, Callable, T, Optional 
 
 from transporters.Result import Result
 from util.HttpUtils import HttpUtils

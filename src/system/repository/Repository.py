@@ -1,8 +1,6 @@
 import os
-from dotenv import load_dotenv
-from requests import HTTPError
-from util.DBConnect import DBConnect 
-from transporters.Result import Result
+from dotenv import load_dotenv 
+from util.DBConnect import DBConnect  
 from util.HttpUtils import HttpUtils 
 load_dotenv()
 

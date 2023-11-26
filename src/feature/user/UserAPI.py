@@ -1,15 +1,15 @@
 from fastapi import APIRouter, Depends 
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer, OAuth2PasswordBearer
 
-from transporters.Data import Data 
-from transporters.Result import Result
-from service.Service import Service
-from util.HttpUtils import HttpUtils 
-from util.Routes import Routes 
 from model.User import User
-
-from auth.Security import  get_password_hash, validate_token
 from feature.user.UserUtils import  get_update_request_by_token, deny_if_user_exists
+
+from system.transporters.Data import Data 
+from system.transporters.Result import Result
+from system.service.Service import Service
+from system.util.HttpUtils import HttpUtils 
+from system.util.Routes import Routes 
+from system.auth.Security import  get_password_hash, validate_token
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=Routes.OAuth2PasswordBearer_Token_URL)

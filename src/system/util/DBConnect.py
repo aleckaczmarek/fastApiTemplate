@@ -1,4 +1,4 @@
-from fastapi import HTTPException
+ 
 from ravendb import DocumentStore 
 
 from transporters.Result import Result

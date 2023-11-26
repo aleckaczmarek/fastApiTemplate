@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional, Union
-from model.User import User
+from src.model.User import User
 from transporters.Result import Result 
 
 class Data(BaseModel):
