@@ -1,11 +1,12 @@
-from requests import HTTPError
-from src.repository.Repository import Repository   
-from src.util.Middleware import Middleware
-from src.transporters.Result import Result
+from fastapi import HTTPException
+from requests import HTTPError 
+from repository.Repository import Repository   
+from util.Middleware import Middleware
+from transporters.Result import Result
 from typing import Awaitable, Callable, T, Optional
 
-from src.util.HttpUtils import HttpUtils
-from src.transporters.Data import Data
+from util.HttpUtils import HttpUtils
+from transporters.Data import Data
 
 class Service():
    
@@ -29,17 +30,17 @@ class Service():
           print("result create service", result)
           return result
        except Exception as error:
-          return await self.httpUtils.handleError(error, "Error in service")
+          return await self.httpUtils.handleError(error, "[ Error Service ] Create")
       
 
     async def getAll(self,middleware: Optional[Callable[..., Awaitable[T]]]):
-       async def getAll(data):
+       async def getAll(data): 
             return await self.repo.getAll()
        try:
             result =  await self.middlewareRunner(None,getAll,middleware)
             return result
        except Exception as error:
-            return await self.httpUtils.handleError(error, "Error in service get all")
+            return await self.httpUtils.handleError(error, "[ Error Service ] Get All")
 
     async def get(self,data,middleware: Optional[Callable[..., Awaitable[T]]]):
        async def get(data):
@@ -53,18 +54,17 @@ class Service():
             result =  await self.middlewareRunner(data,get,middleware)
             return result
        except Exception as error:
-            return await self.httpUtils.handleError(error, "Error in service get")
+            return await self.httpUtils.handleError(error, "[ Error Service ] Get")
     
     async def getWhere(self,key,value,middleware: Optional[Callable[..., Awaitable[T]]]):
        async def getWhere(data):
             return await self.repo.getWhere(data['key'],data['value'])
-      
        try:
           result = await self.middlewareRunner({"key":key,"value":value},getWhere,middleware)
           print("result getWhere service", result)
           return result
        except Exception as error:
-          return await self.httpUtils.handleError(error, "Error in service")
+          return await self.httpUtils.handleError(error, "[ Error Service ] Get Where")
   
 
     async def delete(self, id,middleware: Optional[Callable[..., Awaitable[T]]]):
@@ -87,5 +87,5 @@ class Service():
           result =  await self.middlewareRunner(data,update,middleware) 
           return result
        except Exception as error:
-          return await self.httpUtils.handleError(error, "Error in service")
+          return await self.httpUtils.handleError(error, "[ Error Service ] Update")
  

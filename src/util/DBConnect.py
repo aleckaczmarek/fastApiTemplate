@@ -1,8 +1,8 @@
 from fastapi import HTTPException
 from ravendb import DocumentStore 
 
-from src.transporters.Result import Result
-from src.util.HttpUtils import  HttpUtils
+from transporters.Result import Result
+from util.HttpUtils import  HttpUtils
 
 class DBConnect(): 
     # ie 'http://127.0.0.1:2222'
@@ -77,7 +77,7 @@ class DBConnect():
         try: 
             query = self.session.query_collection(self.collectionName)  
             results = query.get_query_result().results
-            return Result().build("status","success").build("data",{"query":results})
+            return Result().build("status","success").build("data",{"query":results}) 
         except (Exception) as error: 
             print("error db connect get all ",error)
             return await self.httpUtils.handleError(error,"Error Getting All DBConnect")

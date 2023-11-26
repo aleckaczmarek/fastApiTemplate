@@ -1,10 +1,10 @@
 from fastapi import HTTPException  
 
-from src.service.Service import Service
-from src.model.User import User
-from src.util.HttpUtils import HttpUtils 
+from service.Service import Service
+from model.User import User
+from util.HttpUtils import HttpUtils 
  
-from src.auth.Security import get_user_security, get_current_user
+from auth.Security import get_user_security, get_current_user
 
 
 service = Service(User)  

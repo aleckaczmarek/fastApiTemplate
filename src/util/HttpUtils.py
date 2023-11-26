@@ -1,7 +1,8 @@
 from typing import Optional
 from fastapi import HTTPException 
-from src.transporters.Result import Result
-from src.util.General import General
+
+from transporters.Result import Result
+from util.General import General
 
 class HttpUtils():
     def __init__(self): 
@@ -33,6 +34,4 @@ class HttpUtils():
         else :
                 print("[ Error Raised ]") 
                 self.generalUtils.prettyPrint(error)
-                self.generalUtils.prettyPrint(error.error)
-                self.generalUtils.prettyPrint(error.clientErrorMessage)
                 raise HTTPException(500, str(error.clientErrorMessage)) 

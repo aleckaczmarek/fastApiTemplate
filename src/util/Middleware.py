@@ -1,8 +1,8 @@
 from typing import Awaitable, Callable, T, Optional
 from fastapi import HTTPException
 
-from src.transporters.Result import Result
-from src.util.HttpUtils import HttpUtils
+from transporters.Result import Result
+from util.HttpUtils import HttpUtils
 
 
 class Middleware():

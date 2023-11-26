@@ -1,7 +1,6 @@
 import json
 class General():
     def prettyPrint(self, dictionary):
-        print("[ TYPE OF PRETTY PRINT ] ",type(dict), isinstance(dictionary,object))
         if dictionary is None:
             return
         if type(dictionary) is not dict:
