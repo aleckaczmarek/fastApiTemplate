@@ -1,9 +1,9 @@
 from fastapi import HTTPException  
 
-from system.service.Service import Service
-from model.User import User
-from system.util.HttpUtils import HttpUtils 
+from api.model.User import User
  
+from system.service.Service import Service
+from system.util.HttpUtils import HttpUtils 
 from system.auth.Security import get_user_security, get_current_user
 
 

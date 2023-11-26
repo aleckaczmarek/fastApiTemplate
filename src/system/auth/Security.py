@@ -1,15 +1,15 @@
 from datetime import datetime, timedelta
 from typing import Annotated, Optional
-
 from fastapi import Depends, HTTPException, status, APIRouter
 from fastapi.security import   OAuth2PasswordBearer, OAuth2PasswordRequestForm 
-
 from jose import JWTError, jwt 
 from passlib.context import CryptContext
 from pydantic import BaseModel
-from model.User import User 
-from service.Service import Service
-from util.Routes import Routes 
+
+from api.model.User import User 
+
+from system.service.Service import Service
+from system.util.Routes import Routes 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=Routes.OAuth2PasswordBearer_Token_URL) 
 router = APIRouter()

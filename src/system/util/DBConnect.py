@@ -1,8 +1,8 @@
  
 from ravendb import DocumentStore 
 
-from transporters.Result import Result
-from util.HttpUtils import  HttpUtils
+from system.transporters.Result import Result
+from system.util.HttpUtils import  HttpUtils
 
 class DBConnect(): 
     # ie 'http://127.0.0.1:2222'

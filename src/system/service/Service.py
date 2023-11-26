@@ -1,10 +1,10 @@
  
-from repository.Repository import Repository   
-from util.Middleware import Middleware 
 from typing import Awaitable, Callable, T, Optional
 
-from util.HttpUtils import HttpUtils
-from transporters.Data import Data
+from system.repository.Repository import Repository   
+from system.util.Middleware import Middleware 
+from system.util.HttpUtils import HttpUtils
+from system.transporters.Data import Data
 
 class Service():
    

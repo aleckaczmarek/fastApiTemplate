@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv 
-from util.DBConnect import DBConnect  
-from util.HttpUtils import HttpUtils 
+from system.util.DBConnect import DBConnect  
+from system.util.HttpUtils import HttpUtils 
 load_dotenv()
 
 class Repository():

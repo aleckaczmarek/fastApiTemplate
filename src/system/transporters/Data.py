@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional, Union
-from src.model.User import User
-from transporters.Result import Result 
+from api.model.User import User
+from system.transporters.Result import Result 
 
 class Data(BaseModel):
     data:  Optional[Union[User, Result]] = None

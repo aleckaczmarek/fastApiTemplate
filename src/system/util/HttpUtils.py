@@ -1,8 +1,8 @@
 from typing import Optional
 from fastapi import HTTPException 
 
-from transporters.Result import Result
-from util.General import General
+from system.transporters.Result import Result
+from system.util.General import General
 
 class HttpUtils():
     def __init__(self): 

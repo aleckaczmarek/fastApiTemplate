@@ -1,7 +1,7 @@
 import unittest
-from model.User import User
-from service.Service import Service
-from repository.Repository import Repository
+from api.model.User import User
+from system.service.Service import Service
+from system.repository.Repository import Repository
 
 
 # class TestUserRepository(unittest.TestCase):

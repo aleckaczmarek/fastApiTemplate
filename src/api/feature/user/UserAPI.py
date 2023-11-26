@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends 
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer, OAuth2PasswordBearer
 
-from model.User import User
-from feature.user.UserUtils import  get_update_request_by_token, deny_if_user_exists
+from api.model.User import User
+from api.feature.user.UserUtils import  get_update_request_by_token, deny_if_user_exists
 
 from system.transporters.Data import Data 
 from system.transporters.Result import Result

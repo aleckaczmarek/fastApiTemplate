@@ -1,16 +1,16 @@
 macroMapper/
   __init__.py
   src/main.py
-  src/auth/
+  src/system/auth/
     Security.py
-  src/feature/
+  src/api/feature/
     user/
       UserAPI.py
       UserUtils.py
     contract/
       ContractAPI.py
       ContractUtils.py
-  src/model/
+  src/api/model/
     User.py
     Contract.py
   src/system/repository/
