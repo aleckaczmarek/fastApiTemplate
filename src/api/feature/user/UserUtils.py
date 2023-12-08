@@ -43,10 +43,8 @@ async def get_update_request_by_token(result, data):
         
         
         
-async def allow_access_by_user_id_or_admin(result, data):
-    print("in middleware of allow_access_by_user_id_or_admin ",data)
-    user = await get_current_user(data.options.get("token"))
-    print("type of user ", type(user)) 
+async def allow_access_by_user_id_or_admin(result, data): 
+    user = await get_current_user(data.options.get("token")) 
     auths:list[str] = user.auths
     groups:list[str] = user.groups
     groups = ' '.join(str(g)for g in groups)
