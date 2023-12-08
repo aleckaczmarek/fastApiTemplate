@@ -32,10 +32,6 @@ async def get_user(userid,token:HTTPAuthorizationCredentials = Depends(auth_sche
     print("token ",token)
     print("userid ",userid)
     await validate_token(token.credentials) 
-    #TODO add middleware to filter out access say if token user 
-    # id does not match user id and group admin does not exist etc
-    # any user can get any user currently
-  
     user = User().build("Id",userid) 
     data = Data().build("data",user).build("options", {"token":token.credentials})
     print("data get ",data)
