@@ -47,7 +47,8 @@ async def get_user_security(username: str):
     print("respone in get user", response)
     if len(response) == 0:
         return None
-    user =  User(**response[0].dict()) 
+    user =  User(**response[0].dict())
+    print("userc reated ",user) 
     return user
 
 async def authenticate_user(username: str, password: str): 
@@ -96,13 +97,13 @@ def get_token(header):
     return token
 
 def validate_by_auth_and_group(auths:Optional[list[str]]=None,groups:Optional[list[str]]=None,allowed_auths:Optional[list[str]]=None,allowed_groups:Optional[list[str]]=None):
+    print("[ START VALIDATE BY AUTH AND GROUP ]")
     accessAuth = False
     accessGroup = False
     if allowed_groups is None:
         accessGroup = True
     if allowed_auths is None:
         accessAuth = True
-
     if type(allowed_auths) is not list and type(allowed_auths) is not type(None):
         raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -124,17 +125,18 @@ def validate_by_auth_and_group(auths:Optional[list[str]]=None,groups:Optional[li
                     accessAuth = True 
             if accessAuth is False:
                 raise credentials_exception
-    while accessGroup is False:
-        print("starting group search ")
+    while accessGroup is False: 
         if  allowed_groups is not None:
             for group in allowed_groups:
                 print("group ", group)
-                if group is not None and groups is not None and group  in groups :
+                if group is not None and groups is not None and group in groups :
                     accessGroup = True 
             if accessGroup is False:
                 raise credentials_exception
         if accessGroup and accessAuth is False:
             raise credentials_exception
+    print("[ END VALIDATE BY AUTH AND GROUP ] TRUE AUTHORIZED")
+    return True
 
 async def validate_token(token: Annotated[str, Depends(oauth2_scheme)],allowed_auths:Optional[list[str]]=None,allowed_groups:Optional[list[str]]=None):
     try: 

@@ -22,6 +22,9 @@ class Middleware():
                     data.build("data", result.data)
                     data =  await method(data)
                     print("method returned from middle ware with data ",data)
+                    # // TODO add status.error error check here
+                    if type(data) is Result and data.status is "error":
+                        return data
                     result.build("data", data)
                     return result
                 elif(result.status=="error" and result.clientErrorMessage is not None and len(result.clientErrorMessage)  > 0 ):

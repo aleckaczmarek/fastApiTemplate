@@ -19,10 +19,12 @@ class DBConnect():
         except:
             print("no connection to disconnect")
         finally:
+            print("starting collection connection ")
             self.store = DocumentStore(self.baseUrl, collectionName)
             self.collectionName = collectionName
             self.store.initialize()
             self.session = self.store.open_session()
+            print("connection opened end ", self.store)
     
     def endConnectionFromCollection(self):
         self.session.close()
@@ -62,16 +64,37 @@ class DBConnect():
             return await self.httpUtils.handleError(error,"Error Updating Document DBConnect") # Result().build("status","error").build("error",error)
 
     async def getFromConnectedCollection(self, key):
+        try:  
+            print("about to get doc ",key) 
+            document = self.session.load(key)  
+            print("dco gotten type ", type(document))
+            if  document is None or type(document) == None : 
+                print("none found")
+                return await self.httpUtils.handleError(None,"No Document Found To Get DBConnect")
+            else: 
+                print("doc gotten ",document)  
+                return Result().build("status","success").build("data",{"query":document})
+        except (Exception) as error: 
+            print("error db connect ",error)
+            return await self.httpUtils.handleError(error,"Error Getting Document DBConnect") # Result().build("status","error").build("error",error)
+
         try: 
             results = self.session.load(key)
+            print("results from getFromConnectedCollection  ", results)
             return Result().build("status","success").build("data",{"query":results})
         except (Exception) as error: 
             print("error db connect get ",error)
             return await self.httpUtils.handleError(error,"Error Getting User DBConnect")
     
-    def getWhereFromConnectedCollection(self,key,value):
-         query = self.session.query_collection(self.collectionName).where_equals(key,value)
-         return query.get_query_result().results
+    async def getWhereFromConnectedCollection(self,key,value):
+        try: 
+            query = self.session.query_collection(self.collectionName).where_equals(key,value)
+            results = query.get_query_result().results
+            return Result().build("status","success").build("data",{"query": results})
+        except (Exception) as error: 
+            print("error db connect get ",error)
+            return await self.httpUtils.handleError(error,"Error Getting User DBConnect")
+        
     
     async def getAllFromConnectedCollection(self): 
         try: 
@@ -88,9 +111,9 @@ class DBConnect():
         self.addToConnectedCollection(self, object, key)
         self.endConnectionFromCollection(self)
     
-    def getFromCollection(self, collectionName, key):
-        self.connectToCollection(self,collectionName)
+    async def getFromCollection(self, collectionName, key):
+        self.connectToCollection(collectionName)
         document =  self.session.load(key)
-        self.endConnectionFromCollection(self)
+        self.endConnectionFromCollection()
         return document
  

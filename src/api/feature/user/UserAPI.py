@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer, OAuth2PasswordBearer
 
 from api.model.User import User
-from api.feature.user.UserUtils import  get_update_request_by_token, deny_if_user_exists
+from api.feature.user.UserUtils import  get_update_request_by_token, deny_if_user_exists, allow_access_by_user_id_or_admin
 
 from system.transporters.Data import Data 
 from system.transporters.Result import Result
@@ -10,7 +10,6 @@ from system.service.Service import Service
 from system.util.HttpUtils import HttpUtils 
 from system.util.Routes import Routes 
 from system.auth.Security import  get_password_hash, validate_token
-
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=Routes.OAuth2PasswordBearer_Token_URL)
 service = Service(User)  
@@ -36,10 +35,11 @@ async def get_user(userid,token:HTTPAuthorizationCredentials = Depends(auth_sche
     #TODO add middleware to filter out access say if token user 
     # id does not match user id and group admin does not exist etc
     # any user can get any user currently
-    user = User().build("Id",userid)
-    data = Data().build("data",user)
+  
+    user = User().build("Id",userid) 
+    data = Data().build("data",user).build("options", {"token":token.credentials})
     print("data get ",data)
-    return await runnerWithData(service.get,data,None)
+    return await runnerWithData(service.get,data,allow_access_by_user_id_or_admin)
 
 # Needs end to end error handling confirmation
 @router.post('/api/users/create',response_model=Result)

@@ -55,15 +55,17 @@ class Repository():
 
     async def get(self, id):
         try:
-            response = await self.db.getFromConnectedCollection(id)
-            if response.status is "error" :
-                return response
+            result = await self.db.getFromConnectedCollection(id)
+            print("object get  ", result)
+            print("object type get  ", type(result))
+            if result.status is "error" :
+                return result
             newDoc = self.model()
             print("new doc ", newDoc)
-            for doc in response.data.get("query"): 
+            for doc in result.data.get("query"): 
                 newDoc.build(doc[0],doc[1])
-            response.build("data",{"query":newDoc})
-            return response
+            result.build("data",{"query":newDoc})
+            return result
         except (Exception) as error:
             print(error)
             print("error repo")
@@ -72,10 +74,12 @@ class Repository():
     async def getWhere(self,key,value):
         try:
             documents = []
-            query = self.db.getWhereFromConnectedCollection(key,value)
-            if query.status is "error" :
-                return query
-            for doc in query:
+            result = await self.db.getWhereFromConnectedCollection(key,value)
+            print("object get where ", result)
+            print("object type get where ", type(result))
+            if result.status is "error" :
+                return result
+            for doc in result.data.get("query"):
                 del doc['@metadata'] 
                 newDoc = self.model()
                 for key in doc:
