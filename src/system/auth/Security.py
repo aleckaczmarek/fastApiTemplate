@@ -154,7 +154,7 @@ async def validate_token(token: Annotated[str, Depends(oauth2_scheme)],allowed_a
 
         print("[ Authorized ]",{"valid":True})
         return {"valid":True}
-    except JWTError:
+    except JWTError  as error:
         print("[ Authorized ]",{"valid":False})
         raise credentials_exception
 

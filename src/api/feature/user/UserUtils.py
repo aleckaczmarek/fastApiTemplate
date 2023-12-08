@@ -51,9 +51,13 @@ async def allow_access_by_user_id_or_admin(result, data):
     groups:list[str] = user.groups
     groups = ' '.join(str(g)for g in groups)
     auths = ' '.join(str(a)for a in auths)
-    if data.data.Id is not user.Id and validate_by_auth_and_group(auths,groups,["admin"],["admin:all", "admin:read", "admin:write", "admin:update"]) is not True  : 
-        print("REJECTED ALLOW ACCESS BY USER ID OR ADMIN")
+    try:
+        if data.data.Id is not user.Id and validate_by_auth_and_group(auths,groups,["admin"],["admin:all", "admin:read", "admin:write", "admin:update"]) is not True  : 
+            print("REJECTED ALLOW ACCESS BY USER ID OR ADMIN")
+    except HTTPException  as error:
+        print("[ ALLOW ACCESS BY USER ID OR ADMIN DENIED]",error)
         return result.build("data",{}).build("status","error").build("error","IDS DO NOT MATCH").build("clientErrorMessage","Access Denied")
+    
     print("BUILDING RESULT allow_access_by_user_id_or_admin")
     result.build("data",data.data)
     result.build("status","success")
