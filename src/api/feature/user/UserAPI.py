@@ -26,7 +26,7 @@ async def retrieve_users(token:HTTPAuthorizationCredentials = Depends(auth_schem
     await validate_token(token.credentials,["admin"],["admin:all"])
     return await runner(service.getAll,None)
 
-# Needs end to end error handling confirmation
+# Needs end to end error handling confirmation, middleware works
 @router.get('/api/users/get/{userid}',response_model=Result)
 async def get_user(userid,token:HTTPAuthorizationCredentials = Depends(auth_scheme)): 
     print("token ",token)
