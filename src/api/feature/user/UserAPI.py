@@ -57,6 +57,7 @@ async def delete_user(userid,token:HTTPAuthorizationCredentials = Depends(auth_s
 
 # Needs adjustment, token validation, error handling, end to end 
 #test
+# Verify that update is corrupting db, determine why and resolve. I Think it isnt but tbd. Prob machine left on too long.
 @router.post('/api/users/update',response_model=Result)
 async def update_user(data:Data, token:HTTPAuthorizationCredentials = Depends(auth_scheme)):
     await validate_token(token.credentials)

@@ -1,5 +1,6 @@
 import os
-from dotenv import load_dotenv 
+from dotenv import load_dotenv
+from fastapi import HTTPException 
 from system.util.DBConnect import DBConnect  
 from system.util.HttpUtils import HttpUtils 
 load_dotenv()
@@ -56,6 +57,7 @@ class Repository():
     async def get(self, id):
         try:
             result = await self.db.getFromConnectedCollection(id)
+           
             print("object get  ", result)
             print("object type get  ", type(result))
             if result.status is "error" :

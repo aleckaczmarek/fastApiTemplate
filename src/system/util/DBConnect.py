@@ -1,4 +1,5 @@
  
+from fastapi import HTTPException
 from ravendb import DocumentStore 
 
 from system.transporters.Result import Result
@@ -48,6 +49,7 @@ class DBConnect():
         try: 
             document =  self.session.load(key)  
             print("dco gotten type ", type(document))
+            
             if  document is None or type(document) == None : 
                 print("none found")
                 return await self.httpUtils.handleError(None,"No Document Found To Update DBConnect")

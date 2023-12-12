@@ -1,6 +1,8 @@
  
 from typing import Awaitable, Callable, T, Optional
 
+from fastapi import HTTPException
+
 from system.repository.Repository import Repository   
 from system.util.Middleware import Middleware 
 from system.util.HttpUtils import HttpUtils
@@ -41,6 +43,9 @@ class Service():
             return await self.httpUtils.handleError(error, "[ Error Service ] Get All")
 
     async def get(self,data,middleware: Optional[Callable[..., Awaitable[T]]]):
+      #  TODO, determine if type check is still needed. Since adding options dict I think it is not.
+      # You can also filter the middlewareData object inside the data var injected in the get(data) method here.
+      # Maybe add a filter list here somehow to grab from the model? Or in the service?
        async def get(data):
          if type(data) == Data:
             print("in data type Data " ,data.data.Id)
@@ -49,6 +54,7 @@ class Service():
             print("in non type Data ", data)
             return await self.repo.get(data.Id)
        try:
+          
             result =  await self.middlewareRunner(data,get,middleware)
             return result
        except Exception as error:
