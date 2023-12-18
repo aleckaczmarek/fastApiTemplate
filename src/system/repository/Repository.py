@@ -2,14 +2,13 @@ import os
 from dotenv import load_dotenv
 from fastapi import HTTPException 
 from system.util.DBConnect import DBConnect  
-from system.util.HttpUtils import HttpUtils 
+from system.util.HttpUtils import handleError, returnErrorCheckResolver
 load_dotenv()
 
 class Repository():
     
     def __init__(self, model):
-        BASE_DB_URL = os.getenv('BASE_DB_URL')
-        self.httpUtils = HttpUtils()
+        BASE_DB_URL = os.getenv('BASE_DB_URL') 
         self.db = DBConnect(model, BASE_DB_URL)
         self.db.connectToCollection(model().collection_name)
         self.model=model
@@ -19,17 +18,23 @@ class Repository():
             print("in try add about ")
             result = await self.db.addToConnectedCollection(data,data.Id)
             print("result from addToConnectedCOllection in repo ", result)
+            if returnErrorCheckResolver(result):
+                return result 
+            # Logic here if needed
             return result
         except (Exception) as error:
-             return await self.httpUtils.handleError(error, "[ Error Repository ] Add") 
+             return await handleError(error, "[ Error Repository ] Add") 
      
     async def update(self, data, key):
         try:
             result =  await self.db.updateInConnectedCollection(data, key) 
             print ("repo update result ", result)
+            if returnErrorCheckResolver(result):
+                return result 
+            # Logic here if needed
             return result
         except (Exception) as error: 
-            return await self.httpUtils.handleError(error, "[ Error Repository ] Update") 
+            return await handleError(error, "[ Error Repository ] Update") 
     
     async def getAll(self): 
         try:
@@ -37,8 +42,8 @@ class Repository():
             response = await self.db.getAllFromConnectedCollection()
             print("getAll in repo ", response)
 
-            if response.status is "error" :
-                return response
+            if returnErrorCheckResolver(response):
+                return response 
             #TODO update so we can get filter list from model directly, make filter list uneditable by builder 
             for doc in response.data.get("query"):
                 del doc['@metadata'] 
@@ -52,7 +57,7 @@ class Repository():
         except (Exception) as error:
             print("error repo")
             print(error)
-            return await self.httpUtils.handleError(error, "[ Error Repository ] Get All") 
+            return await handleError(error, "[ Error Repository ] Get All") 
 
     async def get(self, id):
         try:
@@ -60,8 +65,8 @@ class Repository():
            
             print("object get  ", result)
             print("object type get  ", type(result))
-            if result.status is "error" :
-                return result
+            if returnErrorCheckResolver(result):
+                return result 
             newDoc = self.model()
             print("new doc ", newDoc)
             for doc in result.data.get("query"): 
@@ -71,7 +76,7 @@ class Repository():
         except (Exception) as error:
             print(error)
             print("error repo")
-            return await self.httpUtils.handleError(error, "[ Error Repository ] Get") 
+            return await handleError(error, "[ Error Repository ] Get") 
         
     async def getWhere(self,key,value):
         try:
@@ -79,8 +84,8 @@ class Repository():
             result = await self.db.getWhereFromConnectedCollection(key,value)
             print("object get where ", result)
             print("object type get where ", type(result))
-            if result.status is "error" :
-                return result
+            if returnErrorCheckResolver(result):
+                return result 
             for doc in result.data.get("query"):
                 del doc['@metadata'] 
                 newDoc = self.model()
@@ -91,14 +96,15 @@ class Repository():
         except (Exception) as error:
             print("error repo")
             print(error)
-            return await self.httpUtils.handleError(error, "[ Error Repository ] Get Where") 
+            return await handleError(error, "[ Error Repository ] Get Where") 
 
     async def delete(self, id):
         try:
             response = await self.db.deleteFromConnectedCollection(id)
-            if response.status is "error" :
+            if returnErrorCheckResolver(response):
                 return response
+            # Logic here if needed
             return response
         except (Exception) as error:
             print(error)
-            return await self.httpUtils.handleError(error, "[ Error Repository ] Delete") 
+            return await handleError(error, "[ Error Repository ] Delete") 

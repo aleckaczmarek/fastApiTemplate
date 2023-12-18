@@ -2,15 +2,13 @@ from fastapi import HTTPException
 
 from api.model.User import User
  
-from system.service.Service import Service
-from system.util.HttpUtils import HttpUtils 
+from system.service.Service import Service 
+from system.util.HttpUtils import runner 
 from system.auth.Security import get_user_security, get_current_user, validate_by_auth_and_group
 
 
 service = Service(User)  
-httpUtils = HttpUtils()
-
-runner = httpUtils.runner
+ 
 
 
 async def get_update_request_by_token(result, data):
@@ -51,7 +49,8 @@ async def allow_access_by_user_id_or_admin(result, data):
     auths = ' '.join(str(a)for a in auths)
     try:
         if data.data.Id is not user.Id and validate_by_auth_and_group(auths,groups,["admin"],["admin:all", "admin:read", "admin:write", "admin:update"]) is not True  : 
-            print("REJECTED ALLOW ACCESS BY USER ID OR ADMIN")
+            print("[ REJECTED ALLOW ACCESS BY USER ID OR ADMIN ] ")
+            return result.build("data",{}).build("status","error").build("error","IDS DO NOT MATCH").build("clientErrorMessage","Access Denied")
     except HTTPException  as error:
         print("[ ALLOW ACCESS BY USER ID OR ADMIN DENIED]",error)
         return result.build("data",{}).build("status","error").build("error","IDS DO NOT MATCH").build("clientErrorMessage","Access Denied")

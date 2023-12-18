@@ -10,6 +10,8 @@ fastapi model based service repo data store with ravendb as nosql data store
 **Activate venv with:**
 
   - conda activate ~/Path_To_Folder/.conda
+  - 
+  - conda activate ~/Desktop/macroMapper/.conda
 
 **Install deps with:**
 

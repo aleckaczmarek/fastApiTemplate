@@ -9,9 +9,9 @@ from pydantic import BaseModel
 from api.model.User import User 
 
 from system.service.Service import Service
-from system.util.Routes import Routes 
+from system.util.Routes import OAuth2PasswordBearer_Token_URL 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl=Routes.OAuth2PasswordBearer_Token_URL) 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=OAuth2PasswordBearer_Token_URL) 
 router = APIRouter()
 user_service = Service(User) 
 # to get a string like this run:

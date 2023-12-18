@@ -7,18 +7,14 @@ from api.feature.user.UserUtils import  get_update_request_by_token, deny_if_use
 from system.transporters.Data import Data 
 from system.transporters.Result import Result
 from system.service.Service import Service
-from system.util.HttpUtils import HttpUtils 
-from system.util.Routes import Routes 
+from system.util.HttpUtils import runner, runnerWithData 
+from system.util.Routes import OAuth2PasswordBearer_Token_URL
 from system.auth.Security import  get_password_hash, validate_token
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl=Routes.OAuth2PasswordBearer_Token_URL)
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=OAuth2PasswordBearer_Token_URL)
 service = Service(User)  
 router = APIRouter()
-auth_scheme = HTTPBearer()
-httpUtils = HttpUtils()
-
-runner = httpUtils.runner
-runnerWithData = httpUtils.runnerWithData
+auth_scheme = HTTPBearer()  
 
 # Ready
 @router.get('/api/users', response_model=Result)
