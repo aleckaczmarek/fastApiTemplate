@@ -21,9 +21,8 @@ auth_scheme = HTTPBearer()
 @router.get('/api/users', response_model=Result)
 async def retrieve_users(token:HTTPAuthorizationCredentials = Depends(auth_scheme)):
     await validate_token(token.credentials,["admin"],["admin:all"])
-    ollama = Ollama(base_url='http://localhost:11434',
-    model="llama2")
-    print(ollama("why is the sky blue"))
+    # ollama = Ollama(base_url='http://localhost:11434',model="llama2")
+    # print(ollama("why is the sky blue"))
     return await runner(service.getAll,None)
 
 # Needs end to end error handling confirmation, middleware works
