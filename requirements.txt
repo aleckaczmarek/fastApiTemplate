@@ -8,6 +8,7 @@ python-dotenv==1.0.0
 python_multipart==0.0.6
 uvicorn==0.20.0
 python-jose==3.4.0
+langchain==0.0.352
 # needed below after install of python-jose
 # pip3 install "python-jose[cryptography]" v = 3.4.0
 passlib==1.7.4
