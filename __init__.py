@@ -14,6 +14,7 @@ macroMapper/
         Result.py
       util/
         DBConnect.py
+        AIConnect.py
         General.py
         Middleware.py
         HttpUtils.py
@@ -23,6 +24,8 @@ macroMapper/
         user/
           UserAPI.py
           UserUtils.py
+        ai/
+          AiAPI.py 
         contract/
           ContractAPI.py
           ContractUtils.py

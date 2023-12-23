@@ -19,7 +19,7 @@ async def middlewareRunner(data, method, middleware: Optional[Callable[..., Awai
                 data.build("data", result.data)
                 data =  await method(data)
                 print("[ Middleware ] method returned from middle ware with data ", method, data)
-                if returnErrorCheckResolver(data):
+                if await returnErrorCheckResolver(data):
                     return data 
                 result.build("data", data)
                 return result
@@ -29,8 +29,7 @@ async def middlewareRunner(data, method, middleware: Optional[Callable[..., Awai
                 return result
             else:
                 print("[ Middleware ] error getting result from middleware, check middleware function, it must return an object with status and  data if status is success, or error if status is an error ")
-                return Result().build("clientErrorMessage",{"Middleware returned malformed response."}).build("status","error").build("error",{"Middleware function returned malformed, if status success please return data :  { object | dict | string } , if status error please return error: { object | dict | string } and clientErrorMessage:  { object | dict | string } "})
-                
+                return Result().build("clientErrorMessage",{"Middleware returned malformed response."}).build("status","error").build("error",{"Middleware function returned malformed, if status success please return data :  { object | dict | string } , if status error please return error: { object | dict | string } and clientErrorMessage:  { object | dict | string } "})    
         except Exception as error:
             print("[ Middleware ] error in middleware runner with middleware as ... and method as ... ", middleware, method, error) 
             return await handleError(error, "[ Middleware ] Error in middleware, Exception.")

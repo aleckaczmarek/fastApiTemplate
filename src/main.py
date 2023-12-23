@@ -1,9 +1,11 @@
 import uvicorn
 from fastapi import FastAPI 
 from api.feature.user.UserAPI import router as user_router
+from api.feature.ai.AiAPI import router as ai_router
 from system.auth.Security import router as security_router
 
 app = FastAPI()
+app.include_router(ai_router)
 app.include_router(user_router)
 app.include_router(security_router)
 

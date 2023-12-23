@@ -10,7 +10,7 @@ from system.service.Service import Service
 from system.util.HttpUtils import runner, runnerWithData 
 from system.util.Routes import OAuth2PasswordBearer_Token_URL
 from system.auth.Security import  get_password_hash, validate_token
-from langchain.llms import Ollama
+
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=OAuth2PasswordBearer_Token_URL)
 service = Service(User)  
@@ -21,9 +21,8 @@ auth_scheme = HTTPBearer()
 @router.get('/api/users', response_model=Result)
 async def retrieve_users(token:HTTPAuthorizationCredentials = Depends(auth_scheme)):
     await validate_token(token.credentials,["admin"],["admin:all"])
-    # ollama = Ollama(base_url='http://localhost:11434',model="llama2")
-    # print(ollama("why is the sky blue"))
     return await runner(service.getAll,None)
+
 
 # Needs end to end error handling confirmation, middleware works
 @router.get('/api/users/get/{userid}',response_model=Result)

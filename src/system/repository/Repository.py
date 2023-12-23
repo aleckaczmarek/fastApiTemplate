@@ -1,9 +1,9 @@
 import os
 from dotenv import load_dotenv
+load_dotenv()
 from fastapi import HTTPException 
 from system.util.DBConnect import DBConnect  
 from system.util.HttpUtils import handleError, returnErrorCheckResolver
-load_dotenv()
 
 class Repository():
     
@@ -18,7 +18,7 @@ class Repository():
             print("in try add about ")
             result = await self.db.addToConnectedCollection(data,data.Id)
             print("result from addToConnectedCOllection in repo ", result)
-            if returnErrorCheckResolver(result):
+            if await returnErrorCheckResolver(result):
                 return result 
             # Logic here if needed
             return result
@@ -29,7 +29,7 @@ class Repository():
         try:
             result =  await self.db.updateInConnectedCollection(data, key) 
             print ("repo update result ", result)
-            if returnErrorCheckResolver(result):
+            if await returnErrorCheckResolver(result):
                 return result 
             # Logic here if needed
             return result
@@ -42,7 +42,7 @@ class Repository():
             response = await self.db.getAllFromConnectedCollection()
             print("getAll in repo ", response)
 
-            if returnErrorCheckResolver(response):
+            if await returnErrorCheckResolver(response):
                 return response 
             #TODO update so we can get filter list from model directly, make filter list uneditable by builder 
             for doc in response.data.get("query"):
@@ -65,7 +65,7 @@ class Repository():
            
             print("object get  ", result)
             print("object type get  ", type(result))
-            if returnErrorCheckResolver(result):
+            if await returnErrorCheckResolver(result):
                 return result 
             newDoc = self.model()
             print("new doc ", newDoc)
@@ -84,7 +84,7 @@ class Repository():
             result = await self.db.getWhereFromConnectedCollection(key,value)
             print("object get where ", result)
             print("object type get where ", type(result))
-            if returnErrorCheckResolver(result):
+            if await returnErrorCheckResolver(result):
                 return result 
             for doc in result.data.get("query"):
                 del doc['@metadata'] 
@@ -101,7 +101,7 @@ class Repository():
     async def delete(self, id):
         try:
             response = await self.db.deleteFromConnectedCollection(id)
-            if returnErrorCheckResolver(response):
+            if await returnErrorCheckResolver(response):
                 return response
             # Logic here if needed
             return response

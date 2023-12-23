@@ -66,6 +66,7 @@ async def set_error_middleware(result,data):
 
 
 async def deny_if_user_exists(result, data):
+        print("deny now")
         user = await get_user_security(data.data.username) 
         if user :
             print("user found ", user)
@@ -75,7 +76,9 @@ async def deny_if_user_exists(result, data):
             return result
         else: 
             totalusers = await runner(service.getAll,None) 
-            data.data.build("Id",str(len(totalusers.data.get("query"))))
+            users = totalusers.data.get("query")
+            next_id = len(users)
+            data.data.build("Id",str(next_id))
             result.build("data",data.data)
             result.build("status","success")
             return result
