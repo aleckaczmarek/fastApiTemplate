@@ -2,7 +2,7 @@ import json
 
 def prettyPrint(dictionary):
     if dictionary is None:
-        return
+        return 
     if type(dictionary) is not dict:
         print(dictionary)
         return

@@ -49,8 +49,6 @@ class Repository():
                 del doc['@metadata'] 
                 del doc['hashed_password'] 
                 newDoc = self.model(**doc)
-                # for key in doc:
-                #     newDoc.build(key,doc[key])
                 documents.append(newDoc) 
             response.build("data",{"query":documents})
             return response

@@ -33,6 +33,10 @@ class DomainModel(BaseModel):
         self.__dict__[name] = value
         return self
     
+    @classmethod
+    def get_new_instance(cls, args:dict ):
+        return cls(**args)
+    
     def __eq__(self, other):
         return self.Id == other.Id
 
