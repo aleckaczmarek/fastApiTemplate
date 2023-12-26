@@ -84,6 +84,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     except JWTError:
         raise credentials_exception
     user = await get_user_security(username=token_data.username) 
+    print("user from get_user_security inside get_current_user",user)
     if user is None:
         raise credentials_exception
     return user 
@@ -158,9 +159,7 @@ async def validate_token(token: Annotated[str, Depends(oauth2_scheme)],allowed_a
         print("[ Authorized ]",{"valid":False})
         raise credentials_exception
 
-async def get_current_active_user(
-     token: Annotated[str, Depends(oauth2_scheme)]
-):
+async def get_current_active_user(token: Annotated[str, Depends(oauth2_scheme)]):
     current_user = await get_current_user(token)
     if current_user.disabled:
         raise HTTPException(status_code=400, detail="Inactive user")

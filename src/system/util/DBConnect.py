@@ -63,29 +63,29 @@ class DBConnect():
             print("error db connect ",error)
             return await handleError(error,"Error Updating Document DBConnect") 
 
-    async def getFromConnectedCollection(self, key):
+    async def getFromConnectedCollection(self, id):
         try:  
-            print("about to get doc ",key) 
-            document = self.session.load(key)  
-            print("dco gotten type ", type(document))
-            if  document is None or type(document) == None : 
-                print("none found")
-                return await handleError(None,"No Document Found To Get DBConnect")
-            else: 
-                print("doc gotten ",document)  
-                return Result().build("status","success").build("data",{"query":document})
+            query = self.session.query_collection(self.collectionName).where_equals("Id",id)
+            results = query.get_query_result().results
+            if results is None or len(results) is 0:
+                return Result().build("status","error").build("clientErrorMessage","Error fetching document.").build("error","No Document Found.")
+            return Result().build("status","success").build("data",{"query": results})
         except (Exception) as error: 
             print("error db connect ",error)
             return await handleError(error,"Error Getting Document DBConnect") 
     
     async def getWhereFromConnectedCollection(self,key,value):
         try: 
+            print("get where from connected collection key value ", key, value)
             query = self.session.query_collection(self.collectionName).where_equals(key,value)
             results = query.get_query_result().results
+            if results is None or len(results) is 0:
+                return Result().build("status","error").build("clientErrorMessage","Error fetching document.").build("error","No Document Found.")
+            print("get where from connected collection ", results)
             return Result().build("status","success").build("data",{"query": results})
         except (Exception) as error: 
             print("error db connect get ",error)
-            return await handleError(error,"Error Getting User DBConnect")
+            return await handleError(error,"Error Getting Where DBConnect")
         
     
     async def getAllFromConnectedCollection(self): 

@@ -48,9 +48,9 @@ class Repository():
             for doc in response.data.get("query"):
                 del doc['@metadata'] 
                 del doc['hashed_password'] 
-                newDoc = self.model()
-                for key in doc:
-                    newDoc.build(key,doc[key])
+                newDoc = self.model(**doc)
+                # for key in doc:
+                #     newDoc.build(key,doc[key])
                 documents.append(newDoc) 
             response.build("data",{"query":documents})
             return response
@@ -61,18 +61,16 @@ class Repository():
 
     async def get(self, id):
         try:
+            documents = []
             result = await self.db.getFromConnectedCollection(id)
-           
-            print("object get  ", result)
-            print("object type get  ", type(result))
             if await returnErrorCheckResolver(result):
                 return result 
-            newDoc = self.model()
-            print("new doc ", newDoc)
-            for doc in result.data.get("query"): 
-                newDoc.build(doc[0],doc[1])
-            result.build("data",{"query":newDoc})
-            return result
+            for doc in result.data.get("query"):
+                print("doc in result.data.get  ", doc)
+                del doc['@metadata'] 
+                newDoc = self.model(**doc)
+                documents.append(newDoc) 
+            return documents
         except (Exception) as error:
             print(error)
             print("error repo")
@@ -82,15 +80,14 @@ class Repository():
         try:
             documents = []
             result = await self.db.getWhereFromConnectedCollection(key,value)
-            print("object get where ", result)
+            print("object get where  result", result)
             print("object type get where ", type(result))
             if await returnErrorCheckResolver(result):
                 return result 
             for doc in result.data.get("query"):
+                print("doc in result.data.getwhere", doc)
                 del doc['@metadata'] 
-                newDoc = self.model()
-                for key in doc:
-                    newDoc.build(key,doc[key])
+                newDoc = self.model(**doc)
                 documents.append(newDoc) 
             return documents
         except (Exception) as error:

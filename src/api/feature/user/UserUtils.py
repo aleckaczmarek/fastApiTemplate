@@ -37,16 +37,17 @@ async def get_update_request_by_token(result, data):
     result.build("data",user_update_req)
     result.build("status","success")
     return result
-    
-        
-        
-        
+
+
 async def allow_access_by_user_id_or_admin(result, data): 
+    print("token inside allow_access_by_user_id_or_admin", data.options.get("token"))
     user = await get_current_user(data.options.get("token")) 
+    print("allow_access_by_user_id_or_admin user gotten ", user)
     auths:list[str] = user.auths
     groups:list[str] = user.groups
     groups = ' '.join(str(g)for g in groups)
     auths = ' '.join(str(a)for a in auths)
+    print("about to validate by auth angr group")
     try:
         if data.data.Id is not user.Id and validate_by_auth_and_group(auths,groups,["admin"],["admin:all", "admin:read", "admin:write", "admin:update"]) is not True  : 
             print("[ REJECTED ALLOW ACCESS BY USER ID OR ADMIN ] ")
@@ -55,10 +56,10 @@ async def allow_access_by_user_id_or_admin(result, data):
         print("[ ALLOW ACCESS BY USER ID OR ADMIN DENIED]",error)
         return result.build("data",{}).build("status","error").build("error","IDS DO NOT MATCH").build("clientErrorMessage","Access Denied")
     
-    print("BUILDING RESULT allow_access_by_user_id_or_admin")
     result.build("data",data.data)
     result.build("status","success")
     print("result ", result)
+    print("BUILDING RESULT allow_access_by_user_id_or_admin ",data )
     return result
 
 async def set_error_middleware(result,data):

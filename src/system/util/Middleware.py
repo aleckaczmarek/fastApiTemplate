@@ -9,7 +9,7 @@ async def middlewareRunner(data, method, middleware: Optional[Callable[..., Awai
     result = Result()
     if middleware is not None:
         try:
-            print("[ Middleware ] Starting Runner ", data , type(data) )
+            print("[ Middleware ] Starting Middleware Runner ", data , type(data) )
             result = await middleware(result,data) 
             print("[ Middleware ] middleware result ", result)
             if(result.status=="success"):
@@ -35,6 +35,7 @@ async def middlewareRunner(data, method, middleware: Optional[Callable[..., Awai
             return await handleError(error, "[ Middleware ] Error in middleware, Exception.")
     else:
         try:
+            print("[ Middleware ] Starting Runner with no middleware. ", data , type(data) )
             dataInner = await method(data)
             print("[ Middleware ] returned middleware runner, with middleware injected middleware as NONE INJECTED ",method, dataInner)
             result.build("data",dataInner)

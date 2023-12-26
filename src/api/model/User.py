@@ -1,8 +1,8 @@
-from pydantic import BaseModel 
 from typing import Optional,List
 
-class User(BaseModel):
-    Id: Optional[str] = None
+from system.util.DomainInterface import DomainModel
+ 
+class User(DomainModel):
     first_name:  Optional[str] = None
     last_name: Optional[str] = None
     address_id: Optional[int] = None 
@@ -15,15 +15,8 @@ class User(BaseModel):
     collection_name:Optional[str]  = "users"
     hashed_password: Optional[str] = None
 
-    class Config:
-        orm_mode = True
-        
-    def build(self,key,value):
-        setattr(self,key,value)
-        return self
-
     def __eq__(self, other):
-        return self.Id == other.Id and self.first_name == other.first_name and \
+        return super().__eq__() and self.first_name == other.first_name and \
             self.last_name == other.last_name and self.address_id == other.address_id and \
                 self.email_address == other.email_address
  

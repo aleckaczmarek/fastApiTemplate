@@ -6,9 +6,8 @@ from system.util.General import prettyPrint
 
 async def runner(run,middleware):
     result =  await run(middleware)
-    print("result in http utils ", result)
     if result.status=="success":
-        return result
+        return result.build("middlewareData",{})
     elif result.status=="error":
         return await handleError(result, None)
     else:
@@ -17,7 +16,7 @@ async def runner(run,middleware):
 async def runnerWithData(run,data,middleware):
     result =  await run(data,middleware) 
     if result.status=="success":
-        return result
+        return result.build("middlewareData",{})
     elif result.status=="error": 
         return await handleError(result, None)
     else:
