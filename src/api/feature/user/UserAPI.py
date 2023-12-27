@@ -13,7 +13,7 @@ from system.auth.Security import  get_password_hash, validate_token
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=OAuth2PasswordBearer_Token_URL)
-service = Service(User)  
+service = Service(User())  
 router = APIRouter()
 auth_scheme = HTTPBearer()
 
@@ -26,13 +26,8 @@ async def retrieve_users(token:HTTPAuthorizationCredentials = Depends(auth_schem
 # Needs end to end error handling confirmation, middleware works
 @router.get('/api/users/get/{userid}',response_model=Result)
 async def get_user(userid,token:HTTPAuthorizationCredentials = Depends(auth_scheme)): 
-    print("token ",token)
-    print("userid ",userid)
-    await validate_token(token.credentials) 
-    user = User(Id=userid) 
-    newUser = user.get_new_instance({"Id":5})
-    print("user build in get controller ", user)
-    print("[NEW USER] ", newUser)
+    await validate_token(token.credentials)
+    user = User(Id=userid)
     data = Data().build("data",user).build("options", {"token":token.credentials})
     print("data get ",data)
     return await runnerWithData(service.get,data,allow_access_by_user_id_or_admin)

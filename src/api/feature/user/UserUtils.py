@@ -3,13 +3,11 @@ from fastapi import HTTPException
 from api.model.User import User
  
 from system.service.Service import Service 
-from system.util.HttpUtils import runner 
+from system.util.HttpUtils import returnErrorCheckResolver, runner 
 from system.auth.Security import get_user_security, get_current_user, validate_by_auth_and_group
 
-
-service = Service(User)  
+service = Service(User())  
  
-
 
 async def get_update_request_by_token(result, data):
     print("in middleware of declaration",data)
@@ -17,8 +15,10 @@ async def get_update_request_by_token(result, data):
     await allow_access_by_user_id_or_admin(result,data)
     
     print("type of user ", type(user))
-    user_update_req = data.data
-    user_update_req.build("Id", user.Id)
+    # TODO verify still works after adding get_new_instance method 
+    # TODO determine better way to assign id, if admin makes request wrong id would be assigned
+    user_update_req = data.data.get_new_instance(**{**data.data.dict(),"Id":user.id})
+    # user_update_req.build("Id", user.Id)
     user_update_req.build("full_name", user.first_name+" "+user.last_name)
     if user_update_req.first_name is not None and user_update_req.last_name is not None:
         user_update_req.build("full_name", user_update_req.first_name+" "+user_update_req.last_name)
@@ -42,6 +42,8 @@ async def get_update_request_by_token(result, data):
 async def allow_access_by_user_id_or_admin(result, data): 
     print("token inside allow_access_by_user_id_or_admin", data.options.get("token"))
     user = await get_current_user(data.options.get("token")) 
+    if await returnErrorCheckResolver(user):
+        return user
     print("allow_access_by_user_id_or_admin user gotten ", user)
     auths:list[str] = user.auths
     groups:list[str] = user.groups

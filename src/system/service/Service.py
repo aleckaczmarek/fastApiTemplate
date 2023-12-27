@@ -64,8 +64,7 @@ class Service():
           return await handleError(error, "[ Error Service ] Get Where")
 
     async def delete(self, id,middleware: Optional[Callable[..., Awaitable[T]]]):
-       item = self.model()
-       item.build("Id",id)
+       item = self.model.get_new_instance(**{"Id":id})
        async def delete(data):
             return await self.repo.delete(data.Id)
        result =  middlewareRunner(item,delete,middleware)

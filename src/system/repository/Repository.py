@@ -10,7 +10,7 @@ class Repository():
     def __init__(self, model):
         BASE_DB_URL = os.getenv('BASE_DB_URL') 
         self.db = DBConnect(model, BASE_DB_URL)
-        self.db.connectToCollection(model().collection_name)
+        self.db.connectToCollection(model.collection_name)
         self.model=model
     
     async def add(self, data):
@@ -48,7 +48,7 @@ class Repository():
             for doc in response.data.get("query"):
                 del doc['@metadata'] 
                 del doc['hashed_password'] 
-                newDoc = self.model(**doc)
+                newDoc = self.model.get_new_instance(**doc)
                 documents.append(newDoc) 
             response.build("data",{"query":documents})
             return response
@@ -66,7 +66,7 @@ class Repository():
             for doc in result.data.get("query"):
                 print("doc in result.data.get  ", doc)
                 del doc['@metadata'] 
-                newDoc = self.model(**doc)
+                newDoc = self.model.get_new_instance(**doc)
                 documents.append(newDoc) 
             return documents
         except (Exception) as error:
@@ -85,7 +85,7 @@ class Repository():
             for doc in result.data.get("query"):
                 print("doc in result.data.getwhere", doc)
                 del doc['@metadata'] 
-                newDoc = self.model(**doc)
+                newDoc = self.model.get_new_instance(**doc)
                 documents.append(newDoc) 
             return documents
         except (Exception) as error:

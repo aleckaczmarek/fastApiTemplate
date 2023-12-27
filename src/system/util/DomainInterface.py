@@ -1,6 +1,7 @@
  
+from ast import Dict
 from pydantic import BaseModel  
-from typing import Optional
+from typing import Any, Optional
 
 class DomainModel(BaseModel):
     Id: Optional[str] = None
@@ -18,7 +19,7 @@ class DomainModel(BaseModel):
         if key is "secured_vars": raise Exception("Secured_vars cannot change after instantiation.\n Use the model constructor to modify.")
         if key is "locked" and ignore_locked_key is not True: raise Exception("Use the .lock() function to lock the model.")
         if self.locked == True: raise Exception("You cannot build or change a model after it is locked.")
-   
+    
     def build(self,key,value):
         self.filter_list(key, False)
         setattr(self,key,value)
@@ -34,8 +35,8 @@ class DomainModel(BaseModel):
         return self
     
     @classmethod
-    def get_new_instance(cls, args:dict ):
-        return cls(**args)
+    def get_new_instance(cls, **kwargs ):
+        return cls(**kwargs)
     
     def __eq__(self, other):
         return self.Id == other.Id

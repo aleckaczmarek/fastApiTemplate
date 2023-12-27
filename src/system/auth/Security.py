@@ -9,11 +9,12 @@ from pydantic import BaseModel
 from api.model.User import User 
 
 from system.service.Service import Service
+from system.util.HttpUtils import returnErrorCheckResolver
 from system.util.Routes import OAuth2PasswordBearer_Token_URL 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=OAuth2PasswordBearer_Token_URL) 
 router = APIRouter()
-user_service = Service(User) 
+user_service = Service(User()) 
 # to get a string like this run:
 # openssl rand -hex 32
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
@@ -45,6 +46,8 @@ async def get_user_security(username: str):
     response = None 
     response = await user_service.getWhere("username",username,None)
     print("respone in get user", response)
+    if await returnErrorCheckResolver(response):
+        return response
     if len(response) == 0:
         return None
     user =  User(**response[0].dict())
