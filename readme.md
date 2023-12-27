@@ -28,4 +28,6 @@ Adjust so util files only use functions, no need for classes. Explore separation
 
 Find a tool to analyze the performance of the code when hit with a ton of concurrent requests.
 
+Find a better way to provide context to down stream methods, options works for middlware but what about filtering from model in repository? Spring provides flat later we can grab and pull from, is there a python equivilant? Or perhaps some sort of "Store" thats request based that allows us to set context on a per request basis... maybe ip ? hmm needs more thought.
+
 - Maybe this tool https://locust.io/
