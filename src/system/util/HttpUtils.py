@@ -28,11 +28,14 @@ async def returnErrorCheckResolver(result):
     else:
         return False   
 
-async def handleError(error, client_error_message:Optional[str]):   
+async def handleError(error, client_error_message:Optional[str | None] = None):   
     if type(error) != Result:
         print("[ Exception Returned ]")
         prettyPrint(error)
-        return  Result().build("status","error").build("error",error).build("clientErrorMessage",client_error_message)
+        res = Result().build("status","error").build("error",error)
+        if client_error_message is not None:
+            res.build("clientErrorMessage",client_error_message)
+        return  res
     else :
             print("[ Error Raised ]") 
             prettyPrint(error)

@@ -9,7 +9,7 @@ from pydantic import BaseModel
 from api.model.User import User 
 
 from system.service.Service import Service
-from system.util.HttpUtils import returnErrorCheckResolver
+from system.util.HttpUtils import returnErrorCheckResolver, handleError
 from system.util.Routes import OAuth2PasswordBearer_Token_URL 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=OAuth2PasswordBearer_Token_URL) 
@@ -56,6 +56,8 @@ async def get_user_security(username: str):
 
 async def authenticate_user(username: str, password: str): 
     user = await get_user_security(username)
+    if await returnErrorCheckResolver(user):
+        return user
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
@@ -173,10 +175,13 @@ async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends()
 ):
     user = await authenticate_user(form_data.username, form_data.password) 
+    if await returnErrorCheckResolver(user):
+        user.build("clientErrorMessage","Incorrect username or password.")
+        await handleError(user)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
+            detail="Incorrect username or password.",
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
