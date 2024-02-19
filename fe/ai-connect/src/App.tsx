@@ -21,8 +21,19 @@ function App() {
     setSending(false)
   } 
   return ( 
-        <div style={{display:'flex',flexDirection:'column', width:'100%',height:'auto', paddingBottom:'120px'}}> 
-          <span style={{fontSize:'42px', margin:'auto', marginBottom:'24px', marginTop:'8px' , fontWeight:'600'}}>Welcome to Ask an Agent</span>
+        <div style={{
+          display:'flex',
+          flexDirection:'column', 
+          width:'100%',
+          height:'auto', 
+          paddingBottom:'120px'}}
+        > 
+          <span style={{
+            fontSize:'42px', 
+            margin:'auto', 
+            marginBottom:'24px', 
+            marginTop:'8px' , 
+            fontWeight:'600'}}>Welcome to Ask an Agent</span>
          <textarea 
               onChange={(e)=>setQuestion(e.target.value)} 
               style={{
@@ -31,7 +42,6 @@ function App() {
                 marginBottom:'32px', 
                 width:'90vw'}} 
           />
-
           <button 
               disabled={sending} 
               onClick={getChatResponse} 
@@ -57,25 +67,60 @@ function App() {
               flexDirection:'column'
               }}
           > 
-
-            { response ? <>
-                              <span style={{fontSize:'32px', marginBottom:'16px'}}>
-                               Prompt 
-                              </span> 
-                              <i>{question}</i>
-                              <span style={{fontSize:'32px', marginTop:'16px', marginBottom:'-16px'}}>
-                                Response: 
-                              </span> 
-                          </> 
-                        : 
-                        null }
-
+          { response ? <>
+                          <span style={{
+                            fontSize:'32px', 
+                            marginBottom:'16px'}}
+                          >
+                            Prompt 
+                          </span> 
+                          <i>{question}</i>
+                          <span style={{
+                            fontSize:'32px', 
+                            marginTop:'16px', 
+                            marginBottom:'-16px'}}
+                          >
+                            Response: 
+                          </span> 
+                        </> 
+                      : 
+                      null }
             {response?.split("\n").map((value)=>{
-              if (value.match(/[0-9]+\./)) return <p  style={{ display:'flex', width:'90%', backgroundColor:'rgba(0,0,0,0.02)', margin:'auto', paddingLeft:'16px', paddingRight:'16px', paddingTop:'12px', paddingBottom:'12px', marginTop:'0px', marginBottom:'0px'}}>{ "" +  value  + "\n"}</p>
-              else if (value.match(/\*/)) return  <p  style={{ display:'flex', width:'90%', backgroundColor:'rgba(0,0,0,0.02)', margin:'auto', paddingLeft:'16px', paddingRight:'16px', paddingTop:'8px', paddingBottom:'8px', marginTop:'0px', marginBottom:'0px'}}>{ "" +  value  + "\n"}</p>
-              else  return <span style={{ marginBottom:'12px',marginTop:'12px'}}>{ value + ""}</span>
-            })}
-
+              if (value.match(/[0-9]+\./)) return <p  style={{ 
+                                                                display:'flex', 
+                                                                width:'90%', 
+                                                                backgroundColor:'rgba(0,0,0,0.02)', 
+                                                                margin:'auto', 
+                                                                paddingLeft:'16px', 
+                                                                paddingRight:'16px', 
+                                                                paddingTop:'12px', 
+                                                                paddingBottom:'12px', 
+                                                                marginTop:'0px', 
+                                                                marginBottom:'0px'}}
+                                                    >
+                                                      { value + "\n" }
+                                                    </p>
+              else if (value.match(/\*/)) return  <p  style={{ 
+                                                                display:'flex', 
+                                                                width:'90%', 
+                                                                backgroundColor:'rgba(0,0,0,0.02)', 
+                                                                margin:'auto', 
+                                                                paddingLeft:'16px', 
+                                                                paddingRight:'16px', 
+                                                                paddingTop:'8px', 
+                                                                paddingBottom:'8px', 
+                                                                marginTop:'0px', 
+                                                                marginBottom:'0px'}}
+                                                    >
+                                                      { value + "\n" }
+                                                    </p>
+              else                        return  <span style={{ 
+                                                                marginBottom:'12px',
+                                                                marginTop:'12px'}}
+                                                    >
+                                                        { value + ""}
+                                                   </span>
+            })} 
           </div>
         </div>
      
