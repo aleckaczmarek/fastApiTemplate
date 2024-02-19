@@ -23,13 +23,7 @@ function App() {
   } 
 
   return ( 
-        <div style={{
-          display:'flex',
-          flexDirection:'column', 
-          width:'100%',
-          height:'auto', 
-          paddingBottom:'120px'}}
-        > 
+        <div style={{  display:'flex', flexDirection:'column', width:'100%',  height:'auto', paddingBottom:'120px'}} > 
           <span className={classes.welcomeHeader}>
             Welcome to Ask an Agent
           </span>
@@ -41,45 +35,36 @@ function App() {
               onClick={getChatResponse} 
               className={classes.chatNowButton} > 
               🤖 Ask Now 🤖
-          </button>
-       
-          <div style={{ 
-              whiteSpace:"pre-wrap", 
-              textAlign:'left',
-              margin:'auto',
-              width:'90%', 
-              display:'flex',
-              flexDirection:'column'
-              }}
-          > 
-          { response ? <>
-                          <span style={{ fontSize:'32px', marginBottom:'16px' }} >
-                            Prompt 
-                          </span> 
-                          <i>
-                            {question}
-                          </i>
-                          <span style={{ fontSize:'32px', marginTop:'16px', marginBottom:'16px' }} >
-                            Response: 
-                          </span> 
-                        </> 
-                      : 
-                      null }
-            {response?.split("\n").map((value)=>{
-              if (value.match(/[0-9]+\./)) return <p className={ classes.numberTextBulletFormat } >
-                                                      { value + "\n" }
-                                                   </p>
-              else if (value.match(/\*/)) return  <p  className={ classes.numberTextAstricsFormat } >
-                                                      { value + "\n" }
-                                                  </p>
-              else                        return  <span className={ classes.defaultTextReturnFormat } >
-                                                      { value + ""}
-                                                  </span>
-            })} 
+          </button> 
+          <div style={{   whiteSpace:"pre-wrap", textAlign:'left',  margin:'auto', width:'90%', display:'flex', flexDirection:'column' }} > 
+              { response ? <>
+                              <span style={{ fontSize:'32px', marginBottom:'16px' }} >
+                                Prompt 
+                              </span> 
+                              <i>
+                                {question}
+                              </i>
+                              <span style={{ fontSize:'32px', marginTop:'16px', marginBottom:'16px' }} >
+                                Response: 
+                              </span> 
+                            </> 
+                          : 
+                  null 
+                }
+                { response?.split("\n")?.map((value)=>{
+                        if (value.match(/[0-9]+\./)) return <p className={ classes.numberTextBulletFormat } >
+                                                                { value + "\n" }
+                                                            </p>
+                        else if (value.match(/\*/)) return  <p  className={ classes.numberTextAstricsFormat } >
+                                                                { value + "\n" }
+                                                            </p>
+                        else                        return  <span className={ classes.defaultTextReturnFormat } >
+                                                                { value + ""}
+                                                            </span>
+                        }) 
+                } 
           </div>
         </div>
-     
-     
   )
 }
 
