@@ -1,4 +1,6 @@
 **/__pycache__
 **/*.pyc
 *.pyc
+node_modules
 .conda
+db
