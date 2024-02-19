@@ -1,5 +1,6 @@
 
 import { useState } from 'react'
+import classes from './App.module.css'
 
 function App() { 
 
@@ -20,6 +21,7 @@ function App() {
     setResponse(data?.data)
     setSending(false)
   } 
+
   return ( 
         <div style={{
           display:'flex',
@@ -28,35 +30,18 @@ function App() {
           height:'auto', 
           paddingBottom:'120px'}}
         > 
-          <span style={{
-            fontSize:'42px', 
-            margin:'auto', 
-            marginBottom:'24px', 
-            marginTop:'8px' , 
-            fontWeight:'600'}}>Welcome to Ask an Agent</span>
+          <span className={classes.welcomeHeader}>
+            Welcome to Ask an Agent
+          </span>
          <textarea 
               onChange={(e)=>setQuestion(e.target.value)} 
-              style={{
-                minHeight:'140px',
-                margin:'auto', 
-                marginBottom:'32px', 
-                width:'90vw'}} 
-          />
+              className={classes.chatText} />
           <button 
               disabled={sending} 
               onClick={getChatResponse} 
-              style={{
-                     margin:'auto', 
-                     borderRadius:'8px',
-                     marginBottom:'32px', 
-                     minHeight:'60px', 
-                     minWidth:'300px', 
-                     backgroundColor:'whitesmoke',
-                     color:'black',
-                     fontWeight:'600', 
-                     fontSize:'28px' 
-                     }}
-          > 🤖 Ask Now 🤖</button>
+              className={classes.chatNowButton} > 
+              🤖 Ask Now 🤖
+          </button>
        
           <div style={{ 
               whiteSpace:"pre-wrap", 
@@ -68,58 +53,28 @@ function App() {
               }}
           > 
           { response ? <>
-                          <span style={{
-                            fontSize:'32px', 
-                            marginBottom:'16px'}}
-                          >
+                          <span style={{ fontSize:'32px', marginBottom:'16px' }} >
                             Prompt 
                           </span> 
-                          <i>{question}</i>
-                          <span style={{
-                            fontSize:'32px', 
-                            marginTop:'16px', 
-                            marginBottom:'-16px'}}
-                          >
+                          <i>
+                            {question}
+                          </i>
+                          <span style={{ fontSize:'32px', marginTop:'16px', marginBottom:'16px' }} >
                             Response: 
                           </span> 
                         </> 
                       : 
                       null }
             {response?.split("\n").map((value)=>{
-              if (value.match(/[0-9]+\./)) return <p  style={{ 
-                                                                display:'flex', 
-                                                                width:'90%', 
-                                                                backgroundColor:'rgba(0,0,0,0.02)', 
-                                                                margin:'auto', 
-                                                                paddingLeft:'16px', 
-                                                                paddingRight:'16px', 
-                                                                paddingTop:'12px', 
-                                                                paddingBottom:'12px', 
-                                                                marginTop:'0px', 
-                                                                marginBottom:'0px'}}
-                                                    >
+              if (value.match(/[0-9]+\./)) return <p className={ classes.numberTextBulletFormat } >
                                                       { value + "\n" }
-                                                    </p>
-              else if (value.match(/\*/)) return  <p  style={{ 
-                                                                display:'flex', 
-                                                                width:'90%', 
-                                                                backgroundColor:'rgba(0,0,0,0.02)', 
-                                                                margin:'auto', 
-                                                                paddingLeft:'16px', 
-                                                                paddingRight:'16px', 
-                                                                paddingTop:'8px', 
-                                                                paddingBottom:'8px', 
-                                                                marginTop:'0px', 
-                                                                marginBottom:'0px'}}
-                                                    >
+                                                   </p>
+              else if (value.match(/\*/)) return  <p  className={ classes.numberTextAstricsFormat } >
                                                       { value + "\n" }
-                                                    </p>
-              else                        return  <span style={{ 
-                                                                marginBottom:'12px',
-                                                                marginTop:'12px'}}
-                                                    >
-                                                        { value + ""}
-                                                   </span>
+                                                  </p>
+              else                        return  <span className={ classes.defaultTextReturnFormat } >
+                                                      { value + ""}
+                                                  </span>
             })} 
           </div>
         </div>
