@@ -1,12 +1,21 @@
-fastapi model based service repo data store with ravendb as nosql data store
+<h1>A FastAPI Model driven Service  </h1>
 
-*To Run:*
+<h3>Database:</h3>
+<h4>RavenDB - A nosql ACID compliant cluster db.</h4>
+
+
+<br/>
+<br/>
+<br/>
+
+<h1>To Run:</h1>
+
 **You can use the provided instance of ravendb**
 **Or get your own here**
-- *https://ravendb.net/download*
-- 
+- *<a href="https://ravendb.net/download">https://ravendb.net/download</a>*
+
 **Install and run ollama from on your mac**
-- *https://ollama.ai/*
+- *<a href="https://ollama.ai">https://ollama.ai/</a>*
 
 
 **Edit .env file in root with your raven db url**
@@ -27,7 +36,12 @@ fastapi model based service repo data store with ravendb as nosql data store
 - `pip3 install "passlib[bcrypt]" v = 4.0.1`
 
 
-*To start the project*
+
+<br/>
+<br/>
+<br/>
+
+<h1>To start the project</h1>
 
 **1. In a terminal window from the `db` package run to start the db**
 - `./run.sh`
