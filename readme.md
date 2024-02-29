@@ -10,11 +10,11 @@ fastapi model based service repo data store with ravendb as nosql data store
 
 
 **Edit .env file in root with your raven db url**
-- *`BASE_DB_URL=http://127.0.0.1:2222` *
+- `BASE_DB_URL=http://127.0.0.1:2222` 
 
 
 **On first run in the project root, create your conda env:**
-`conda create --name <my-env>`
+- `conda create --name <my-env>`
 
 
 **Activate venv by running from the root of this project:**
@@ -37,7 +37,7 @@ fastapi model based service repo data store with ravendb as nosql data store
 
 
 
-The api is now running, you can access the swagger docs at 0.0.0.0/docs
+The api is now running, you can access the swagger docs at <a href="http://0.0.0.0:8080/docs">`http://0.0.0.0:8080/docs`</a>
 
 You can also use pnpm to install and use the FE UI to interface with ollama. You must start ollama on your machine and install the llama model before starting the fastApi server that runs in main.py
 
