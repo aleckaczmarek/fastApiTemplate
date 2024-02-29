@@ -3,4 +3,4 @@
 *.pyc
 node_modules
 .conda
-db
+# db
