@@ -25,7 +25,7 @@ function App() {
     const urlToFetch = "/api/ai/ask/"+toAsk
     const response = await fetch(urlToFetch);
     const data = await response.json();
-    if(isReprompt && responseObjectsArray && index){
+    if(isReprompt && responseObjectsArray && index !== null && index!== undefined){
       const newResp = [...responseObjectsArray]
       newResp[index][index] = data?.data
       setResponseObjectsArray(newResp)
