@@ -41,7 +41,6 @@ function App() {
         return
       }
     setSending(true)
-    
     const toAsk = prompt?prompt:question
     const urlToFetch = "/api/ai/ask/"+toAsk
     const response = await fetch(urlToFetch);

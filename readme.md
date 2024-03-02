@@ -58,6 +58,15 @@ You can also use pnpm to install and use the FE UI to interface with ollama. You
 
 **Todos**
 
+Update nesting selection to allow sub nesting, essentially "infinite" nesting selection and reprompt. Use UUID generation, check if id exists, if so do not create new, if not, create new on first creation.
+To add this feature update: 
+ src/App.tsx 
+ func getChatResponse 
+ approx line #50
+ newResp[index]["info"] = getObjectArraySplitUtil(data?.data)
+ make
+ getObjectArraySplitUtil return a new parent object with the correct nested field change on uuid  recurisive search match.
+
 Adjust so util files only use functions, no need for classes. Explore separation into another module so we can import static single instances of it.
 
 Find a tool to analyze the performance of the code when hit with a ton of concurrent requests.
