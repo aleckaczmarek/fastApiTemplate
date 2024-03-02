@@ -1,4 +1,4 @@
-<h1>A FastAPI Model driven Service  </h1>
+<h1>A FastAPI Model Driven Service  </h1>
 
 <h3>Database:</h3>
 <h4>RavenDB - A nosql ACID compliant cluster db.</h4>
@@ -55,8 +55,6 @@ The api is now running, you can access the swagger docs at <a href="http://0.0.0
 
 You can also use pnpm to install and use the FE UI to interface with ollama. You must start ollama on your machine and install the llama model before starting the fastApi server that runs in main.py
 
-**To start the project from the `be/src` package run**
-- `python3 main.py`
 
 **Todos**
 
