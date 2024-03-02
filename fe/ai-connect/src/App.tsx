@@ -1,28 +1,46 @@
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import classes from './App.module.css'
 
 function App() { 
 
   const [sending,setSending] = useState(false)
+  const [selected,setSelected] = useState<number>()
   const [response, setResponse] = useState<string>()
   const [question, setQuestion] = useState<string>()
+  const [reprompt, setRepromp] = useState<string>()
+  const [responseObjectsArray, setResponseObjectsArray] = useState<{ [x: number]: string; }[] | undefined>()
 
-  const getChatResponse = async () => {
-
-    if( !question ){
+  useEffect(()=>{
+        setResponseObjectsArray(response?.split("\n")?.map((value, index)=>{return {[index]:value}}))
+  },[response]) 
+  const getChatResponse = async (prompt?:string, index?:number, isReprompt?:boolean) => {
+    if( !question && !prompt){
         window.alert("Please enter a question.") 
         return
       }
-
     setSending(true)
-    setResponse('')
-    const response = await fetch("/api/ai/ask/"+question);
+    
+    const toAsk = prompt?prompt:question
+    const urlToFetch = "/api/ai/ask/"+toAsk
+    const response = await fetch(urlToFetch);
     const data = await response.json();
-    setResponse(data?.data)
+    if(isReprompt && responseObjectsArray && index){
+      const newResp = [...responseObjectsArray]
+      newResp[index][index] = data?.data
+      setResponseObjectsArray(newResp)
+    } else {
+      setResponse(data?.data)
+    }
     setSending(false)
   } 
 
+  const onHandleSelected = (prompt:string, index:number) =>{
+    setSelected(selected===index?-1:index)
+    setRepromp("Tell me more about \n \n"+prompt)
+  }
+  
+  
   return ( 
         <div style={{ display:'flex', flexDirection:'column', width:'100%',  height:'auto', paddingBottom:'120px'}} > 
           <span className={classes.welcomeHeader}>
@@ -33,12 +51,12 @@ function App() {
               className={classes.chatText} />
           <button 
               disabled={sending} 
-              onClick={getChatResponse} 
+              onClick={async () => await getChatResponse(question)} 
               className={classes.chatNowButton} > 
               🤖 Ask Now 🤖
           </button> 
           <div style={{ whiteSpace:"pre-wrap", textAlign:'left', margin:'auto', width:'90%', display:'flex', flexDirection:'column' }} > 
-              { response ? <>
+              { responseObjectsArray ? <>
                               <span style={{ fontSize:'32px', marginBottom:'16px' }} >
                                 Prompt 
                               </span> 
@@ -52,15 +70,30 @@ function App() {
                           : 
                   null 
                 }
-                { response?.split("\n")?.map((value)=>{
-                        if (value?.slice(0,5)?.match(/[0-9]+\./)) return <p className={ classes.numberTextBulletFormat } >
-                                                                { value + "\n" }
+                {selected !== null ? <>
+                  <textarea 
+                            value={reprompt}
+                            onChange={(e)=>setRepromp(e.target.value)} 
+                            className={classes.chatText} />
+                        <button 
+                            disabled={sending} 
+                            onClick={async () => await getChatResponse(reprompt, selected, true)} 
+                            className={classes.chatNowButton} > 
+                            🤖 Reprompt this selection now 🤖
+                        </button> 
+                            </>
+                              :
+                  null
+                }
+                { responseObjectsArray?.map((value,index)=>{
+                        if (value[index]?.slice(0,5)?.match(/[0-9]+\./)) return <p onClick={()=>onHandleSelected(value[index],index)} style={{border:selected===index?'1px solid black':'none'}} className={ classes.numberTextBulletFormat } >
+                                                                { value[index] + "\n" }
                                                             </p>
-                        else if (value?.slice(0,5)?.match(/\*/)) return  <p  className={ classes.numberTextAstricsFormat } >
-                                                                { value + "\n" }
+                        else if (value[index]?.slice(0,5)?.match(/\*/)) return  <p onClick={()=>onHandleSelected(value[index],index)} style={{border:selected===index?'1px solid black':'none'}}  className={ classes.numberTextAstricsFormat } >
+                                                                { value[index] + "\n" }
                                                             </p>
-                        else                        return  <span className={ classes.defaultTextReturnFormat } >
-                                                                { value + ""}
+                        else                        return  <span onClick={()=>onHandleSelected(value[index],index)} style={{border:selected===index?'1px solid black':'none'}} className={ classes.defaultTextReturnFormat } >
+                                                                { value[index] + ""}
                                                             </span>
                         }) 
                 } 
