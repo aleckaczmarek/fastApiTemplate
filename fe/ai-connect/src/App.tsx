@@ -10,15 +10,15 @@ const getObjectArraySplitUtil = (data?:string): ResponseObjectArrayType => {
   return data?.split("\n")?.map((value, index)=>{return {[index]:value}})
 }
 
-const getResponseJSX = ( onHandleSelected:(prompt:string, index:number) => void, selected?:number, responseObjArray?:ResponseObjectArrayType ): ReactNode => {
+const getResponseJSX = ( onHandleSelected:(prompt:string, index:number) => void, selected?:number, responseObjArray?:ResponseObjectArrayType, isNested?:boolean ): ReactNode => {
     return responseObjArray?.map((value,index): ReactNode => { 
       const className = value[index]?.slice(0,5)?.match(/[0-9]+\./) ? classes.numberTextBulletFormat : value[index]?.slice(0,5)?.match(/\*/) ? classes.numberTextAstricsFormat : classes.defaultTextReturnFormat;
       
       return (<>
-                <p onClick={()=>onHandleSelected(value[index],index)} style={{border:selected===index?'1px solid black':'none'}} className={className} >
+                <p onClick={()=>isNested && selected ? null:onHandleSelected(value[index],index)} style={{border:selected===index && !isNested ?'1px solid black':'none'}} className={className} >
                     { value[index] + "\n" }
                 </p>
-                {getResponseJSX(onHandleSelected, -1,value.info)}
+                {getResponseJSX(onHandleSelected, selected, value.info, true)}
               </>) 
       }) 
 }
