@@ -1,19 +1,40 @@
 
-import { useEffect, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import classes from './App.module.css'
 
-function App() { 
+type ResponseType = { [x:number]: string, info?:{[x:number]: string, info?:ResponseType[]}[] }
+type ResponseObjectArrayType = ResponseType[] | undefined
 
+
+const getObjectArraySplitUtil = (data?:string): ResponseObjectArrayType => {
+  return data?.split("\n")?.map((value, index)=>{return {[index]:value}})
+}
+
+const getResponseJSX = ( onHandleSelected:(prompt:string, index:number) => void, selected?:number, responseObjArray?:ResponseObjectArrayType ): ReactNode => {
+    return responseObjArray?.map((value,index): ReactNode => { 
+      const className = value[index]?.slice(0,5)?.match(/[0-9]+\./) ? classes.numberTextBulletFormat : value[index]?.slice(0,5)?.match(/\*/) ? classes.numberTextAstricsFormat : classes.defaultTextReturnFormat;
+      
+      return (<>
+                <p onClick={()=>onHandleSelected(value[index],index)} style={{border:selected===index?'1px solid black':'none'}} className={className} >
+                    { value[index] + "\n" }
+                </p>
+                {getResponseJSX(onHandleSelected, -1,value.info)}
+              </>) 
+      }) 
+}
+function App() { 
   const [sending,setSending] = useState(false)
   const [selected,setSelected] = useState<number>()
   const [response, setResponse] = useState<string>()
   const [question, setQuestion] = useState<string>()
   const [reprompt, setRepromp] = useState<string>()
-  const [responseObjectsArray, setResponseObjectsArray] = useState<{ [x: number]: string; }[] | undefined>()
+  const [responseObjectsArray, setResponseObjectsArray] = useState<ResponseObjectArrayType>()
+
 
   useEffect(()=>{
-        setResponseObjectsArray(response?.split("\n")?.map((value, index)=>{return {[index]:value}}))
+        setResponseObjectsArray(getObjectArraySplitUtil(response))
   },[response]) 
+
   const getChatResponse = async (prompt?:string, index?:number, isReprompt?:boolean) => {
     if( !question && !prompt){
         window.alert("Please enter a question.") 
@@ -27,7 +48,7 @@ function App() {
     const data = await response.json();
     if(isReprompt && responseObjectsArray && index !== null && index!== undefined){
       const newResp = [...responseObjectsArray]
-      newResp[index][index] = data?.data
+      newResp[index]["info"] = getObjectArraySplitUtil(data?.data)
       setResponseObjectsArray(newResp)
     } else {
       setResponse(data?.data)
@@ -85,18 +106,9 @@ function App() {
                               :
                   null
                 }
-                { responseObjectsArray?.map((value,index)=>{
-                        if (value[index]?.slice(0,5)?.match(/[0-9]+\./)) return <p onClick={()=>onHandleSelected(value[index],index)} style={{border:selected===index?'1px solid black':'none'}} className={ classes.numberTextBulletFormat } >
-                                                                { value[index] + "\n" }
-                                                            </p>
-                        else if (value[index]?.slice(0,5)?.match(/\*/)) return  <p onClick={()=>onHandleSelected(value[index],index)} style={{border:selected===index?'1px solid black':'none'}}  className={ classes.numberTextAstricsFormat } >
-                                                                { value[index] + "\n" }
-                                                            </p>
-                        else                        return  <span onClick={()=>onHandleSelected(value[index],index)} style={{border:selected===index?'1px solid black':'none'}} className={ classes.defaultTextReturnFormat } >
-                                                                { value[index] + ""}
-                                                            </span>
-                        }) 
-                } 
+
+                {getResponseJSX(onHandleSelected, selected, responseObjectsArray)}
+              
           </div>
         </div>
   )
