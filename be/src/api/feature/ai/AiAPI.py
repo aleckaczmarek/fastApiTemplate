@@ -16,7 +16,7 @@ auth_scheme = HTTPBearer()
 @router.get('/api/ai/ask/{question}', response_model=Result)
 async def ask_ai(question):
     # await validate_token(token.credentials,["admin"],["admin:all"])
-    ai = AiConnect("orca-mini")  
+    ai = AiConnect("mistral")  
     chat = await ai.getResponse(question)
     return Result().build("data",chat)
 
