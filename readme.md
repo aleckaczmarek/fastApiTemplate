@@ -3,8 +3,6 @@
 <h3>Database:</h3>
 <h4>RavenDB - A nosql ACID compliant cluster db.</h4>
 
-
-<br/>
 <br/>
 <br/>
 
@@ -36,8 +34,6 @@
 - `pip3 install "passlib[bcrypt]" v = 4.0.1`
 
 
-
-<br/>
 <br/>
 <br/>
 
@@ -76,6 +72,7 @@ neural-chat:latest      	89fa737d3b85	4.1 GB	2 months ago
 orca-mini:latest        	2dbd9f439647	2.0 GB	2 months ago	
 <br/>
 **Todos**
+<br/>
 Adjust so util files only use functions, no need for classes. Explore separation into another module so we can import static single instances of it.
 
 Find a tool to analyze the performance of the code when hit with a ton of concurrent requests.
