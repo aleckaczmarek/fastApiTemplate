@@ -58,15 +58,23 @@ You can also use pnpm to install and use the FE UI to interface with ollama. You
 
 
 **List of Ollama Models I've Tried So Far**
+<br/>
 codellama:latest        	8fdf8f752f6e	3.8 GB	2 months ago	
+<br/>
 dolphin-mixtral:8x7b    	4b33b01bf336	26 GB 	2 months ago	
+<br/>
 dolphin-mixtral:latest  	4b33b01bf336	26 GB 	2 months ago	
+<br/>
 llama2:latest           	fe938a131f40	3.8 GB	2 months ago	
+<br/>
 llama2-uncensored:latest	44040b922233	3.8 GB	11 days ago 	
+<br/>
 mistral:latest          	4d9f4b269c33	4.1 GB	2 months ago	
+<br/>
 neural-chat:latest      	89fa737d3b85	4.1 GB	2 months ago	
+<br/>
 orca-mini:latest        	2dbd9f439647	2.0 GB	2 months ago	
-
+<br/>
 **Todos**
 Adjust so util files only use functions, no need for classes. Explore separation into another module so we can import static single instances of it.
 
