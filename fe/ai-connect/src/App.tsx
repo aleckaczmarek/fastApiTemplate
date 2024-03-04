@@ -27,7 +27,7 @@ const changeItemToByUUIDWithValue = (uuid?:string, responseObjArray?:ResponseObj
     else if(item?.info) changeItemToByUUIDWithValue(uuid,item?.info,itemToChange)
   })  
 
-  }
+}
  
 
 const getResponseJSX = ( onHandleSelected:(prompt:string, uuid:string) => void, selected?:string, responseObjArray?:ResponseObjectArrayType ): ReactNode => {
