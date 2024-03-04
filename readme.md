@@ -6,7 +6,7 @@
 <br/>
 <br/>
 
-<h1>To Run:</h1>
+<h1>To Setup:</h1>
 
 **You can use the provided instance of ravendb**
 **Or get your own here**
