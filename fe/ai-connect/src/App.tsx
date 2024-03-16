@@ -42,6 +42,20 @@ const getResponseJSX = ( onHandleSelected:(prompt:string, uuid:string) => void, 
       }) 
 }
 
+const postData = async (url = "", data = {}) => {
+  // Default options are marked with *
+  const response = await fetch(url, {
+    method: "POST",  
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+    }, 
+    body: JSON.stringify(data)
+  });
+  return response.json(); // parses JSON response into native JavaScript objects
+}
+
+
+
 function App() { 
   const [sending,setSending] = useState(false)
   const [selected,setSelected] = useState<string>()
@@ -63,9 +77,9 @@ function App() {
       try{
         setSending(true)
         const toAsk = prompt?prompt:question
-        const urlToFetch = "/api/ai/ask/"+toAsk
-        const response = await fetch(urlToFetch);
-        const data = await response.json(); 
+        // const urlToFetch = "/api/ai/ask/"+toAsk
+        // const response = await fetch(urlToFetch);
+        const data = await postData("/api/ai/ask", {question:toAsk})
         if(isReprompt && responseObjectsArray && uuid !== null && uuid!== undefined){
           const newResp = [...responseObjectsArray]  
           changeItemToByUUIDWithValue(uuid, newResp, getObjectArraySplitUtil(data?.data))
@@ -77,6 +91,7 @@ function App() {
         }
         setSending(false)
       } catch (e){
+        console.log("error ",e)
         setSending(false)
       }
     
