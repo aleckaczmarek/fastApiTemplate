@@ -7,8 +7,8 @@ from system.auth.Security import router as security_router
 app = FastAPI() 
 
 app.include_router(ai_router)
-app.include_router(user_router)
-app.include_router(security_router)
+# app.include_router(user_router)
+# app.include_router(security_router)
  
 
 if __name__ == "__main__":
